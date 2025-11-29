@@ -2,7 +2,7 @@
 // app/(dashboard)/dashboard/brands/[id]/edit/page.tsx
 'use client'
 
-import { useEffect, useState } from 'react'
+import { use, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -21,6 +21,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { toast } from 'sonner'
 import { formatDate } from '@/lib/utils'
 
+
 interface Brand {
   id: string
   name: string
@@ -37,12 +38,13 @@ interface Brand {
 }
 
 interface BrandEditPageProps {
-  params: {
-    id: string
-  }
+  params: Promise<{ id: string }>
 }
 
 export default function BrandEditPage({ params }: BrandEditPageProps) {
+
+  const { id } = use(params)
+
   const router = useRouter()
   const [brand, setBrand] = useState<Brand | null>(null)
   const [loading, setLoading] = useState(true)
@@ -66,12 +68,12 @@ export default function BrandEditPage({ params }: BrandEditPageProps) {
 
   useEffect(() => {
     fetchBrand()
-  }, [params.id])
+  }, [id])
 
   const fetchBrand = async () => {
     try {
       setLoading(true)
-      const response = await fetch(`/api/brands/${params.id}`)
+      const response = await fetch(`/api/brands/${id}`)
       
       if (!response.ok) {
         throw new Error('Brand not found')
@@ -277,7 +279,7 @@ export default function BrandEditPage({ params }: BrandEditPageProps) {
     try {
       setSaving(true)
       
-      const response = await fetch(`/api/brands/${params.id}`, {
+      const response = await fetch(`/api/brands/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -332,7 +334,7 @@ export default function BrandEditPage({ params }: BrandEditPageProps) {
         }
       }
 
-      const response = await fetch(`/api/brands/${params.id}`, {
+      const response = await fetch(`/api/brands/${id}`, {
         method: 'DELETE'
       })
 
