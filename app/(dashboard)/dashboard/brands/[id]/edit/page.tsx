@@ -38,12 +38,13 @@ interface Brand {
 }
 
 interface BrandEditPageProps {
-  params: Promise<{ id: string }>
+  params: { id: string }
 }
+
 
 export default function BrandEditPage({ params }: BrandEditPageProps) {
 
-  const { id } = use(params)
+  const { id } = params
 
   const router = useRouter()
   const [brand, setBrand] = useState<Brand | null>(null)
