@@ -2,7 +2,7 @@
 // app/(dashboard)/dashboard/brands/[id]/edit/page.tsx
 'use client'
 
-import { use, useEffect, useState } from 'react'
+import { use, useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -66,11 +66,7 @@ export default function BrandEditPage({ params }: BrandEditPageProps) {
   // Previous logo for deletion
   const [previousLogo, setPreviousLogo] = useState<string>('')
 
-  useEffect(() => {
-    fetchBrand()
-  }, [id])
-
-  const fetchBrand = async () => {
+  const fetchBrand = useCallback(async () => {
     try {
       setLoading(true)
       const response = await fetch(`/api/brands/${id}`)
@@ -97,7 +93,11 @@ export default function BrandEditPage({ params }: BrandEditPageProps) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [id, router]) // Add dependencies
+
+  useEffect(() => {
+    fetchBrand()
+  }, [fetchBrand])
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

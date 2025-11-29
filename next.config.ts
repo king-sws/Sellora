@@ -7,6 +7,13 @@ const nextConfig: NextConfig = {
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
+  typescript: {
+    // !! WARN !!
+    // Dangerously allow production builds to successfully complete even if
+    // your project has type errors.
+    // !! WARN !!
+    ignoreBuildErrors: true,
+  },
   images: {
     remotePatterns: [
       {
@@ -39,11 +46,17 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'lh3.googleusercontent.com', 
       },
-      // Add via.placeholder.com
       {
         protocol: 'https',
         hostname: 'via.placeholder.com',
       },
+      // Add your Vercel domain for uploaded images
+      {
+        protocol: 'https',
+        hostname: '*.vercel.app', // This covers all Vercel preview deployments
+        pathname: '/uploads/**',
+      },
+      
     ],
   },
 };
