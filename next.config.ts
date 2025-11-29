@@ -2,6 +2,45 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'm.media-amazon.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'a.fsdn.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'logo.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn.freebiesupply.com',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost', 
+        port: '3000', 
+        pathname: '/uploads/**', 
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com', 
+      },
+      // Add via.placeholder.com
+      {
+        protocol: 'https',
+        hostname: 'via.placeholder.com',
+      },
+    ],
+  },
 };
 
 export default nextConfig;

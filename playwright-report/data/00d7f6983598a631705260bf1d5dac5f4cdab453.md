@@ -1,0 +1,46 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - heading "Welcome back" [level=2] [ref=e5]
+      - generic [ref=e6]: Sign in to your account to continue where you left off. Secure, fast, and reliable.
+    - generic [ref=e8]:
+      - generic [ref=e9]:
+        - button "Continue with Google" [ref=e10]:
+          - img
+          - text: Continue with Google
+        - button "Continue with GitHub" [ref=e11]:
+          - img
+          - text: Continue with GitHub
+      - generic [ref=e16]: Or continue with email
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - generic [ref=e19]: Email address
+          - generic [ref=e20]:
+            - textbox "Email address" [ref=e21]:
+              - /placeholder: you@company.com
+            - img [ref=e22]
+        - generic [ref=e25]:
+          - generic [ref=e26]:
+            - generic [ref=e27]: Password
+            - link "Forgot password?" [ref=e28] [cursor=pointer]:
+              - /url: /auth/forgot-password
+          - generic [ref=e29]:
+            - textbox "Password" [ref=e30]:
+              - /placeholder: Enter your password
+            - img [ref=e31]
+            - button [ref=e34]:
+              - img [ref=e35]
+        - button "Sign in" [ref=e38]
+      - generic [ref=e39]:
+        - text: Don't have an account?
+        - link "Sign up for free" [ref=e40] [cursor=pointer]:
+          - /url: /auth/sign-up
+    - generic [ref=e41]: Protected by industry-standard encryption and security protocols
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e47] [cursor=pointer]:
+    - img [ref=e48]
+  - alert [ref=e51]
+```
