@@ -1,12 +1,28 @@
 import { Suspense } from 'react'
 import { AdminHeader } from "@/components/admin/header"
 import { Sidebar } from "@/components/Sidebar"
+import { auth } from '@/auth'
+import { redirect } from 'next/navigation'
 
-export default function DashboardLayout({
+
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  // ✅ Check authentication
+  const session = await auth()
+  
+  // Redirect to sign-in if not logged in
+  if (!session?.user) {
+    redirect('/auth/sign-in?callbackUrl=/dashboard')
+  }
+
+  // Redirect to home if not admin
+  if (session.user.role !== 'ADMIN') {
+    redirect('/')
+  }
+
   return (
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar />

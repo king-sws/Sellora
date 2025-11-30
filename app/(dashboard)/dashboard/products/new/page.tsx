@@ -34,7 +34,6 @@ export default async function CreateProductPage() {
   return (
     <div className="container mx-auto">
       <ProductForm 
-        // ✅ No initialData for create mode
         categories={categories}
         brands={brands}
       />

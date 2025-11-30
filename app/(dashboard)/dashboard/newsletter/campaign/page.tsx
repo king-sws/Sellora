@@ -123,11 +123,11 @@ export default function NewsletterCampaignManager() {
   return (
     <div className="p-4 md:p-6 space-y-6">
       {/* Header */}
-<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-  
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+        <div className="flex justify-between items-center gap-4">
   {/* Title + Subtitle */}
   <div>
-    <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900">
+    <h1 className="text-2xl sm:text-3xl font-semibold flex items-center gap-2 text-gray-900">
       Newsletter Campaign Manager
     </h1>
     <p className="text-gray-600 mt-1 text-sm sm:text-base">
@@ -136,14 +136,14 @@ export default function NewsletterCampaignManager() {
   </div>
 
   {/* Back Button */}
-  <Button asChild variant="outline" className="whitespace-nowrap self-start sm:self-auto">
+  <Button asChild variant="outline" className="whitespace-nowrap">
     <Link href="/dashboard/newsletter" className="flex items-center gap-1">
       ← Back to Newsletter
     </Link>
   </Button>
-
 </div>
 
+      </div>
 
       {/* Stats Card */}
       <Card>
