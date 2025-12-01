@@ -5,49 +5,41 @@ import type { NextRequest } from 'next/server'
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
 
-  // Only protect API routes in middleware
-  if (!pathname.startsWith('/api/')) {
-    return NextResponse.next()
+  // Get session cookie (lightweight - no imports!)
+  const sessionToken = request.cookies.get(
+    process.env.NODE_ENV === 'production'
+      ? '__Secure-next-auth.session-token'
+      : 'next-auth.session-token'
+  )
+
+  const isLoggedIn = !!sessionToken
+
+  // Redirect logged-in users away from auth pages
+  if ((pathname === '/auth/sign-in' || pathname === '/auth/sign-up') && isLoggedIn) {
+    return NextResponse.redirect(new URL('/', request.url))
   }
 
-  try {
-    // ✅ Dynamic import - only loads when API route is hit
-    const { auth } = await import('@/auth')
-    const session = await auth()
-    
-    const isLoggedIn = !!session?.user
-    const isAdmin = session?.user?.role === 'ADMIN'
-
-    // Admin API routes
-    if (pathname.startsWith('/api/admin') || pathname.startsWith('/api/dashboard')) {
-      if (!isLoggedIn) {
-        return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
-      }
-      if (!isAdmin) {
-        return NextResponse.json({ error: 'Admin access required' }, { status: 403 })
-      }
-    }
-    
-    // Protected user API routes
-    const protectedApis = ['/api/checkout', '/api/orders', '/api/profile', '/api/addresses']
-    if (protectedApis.some(api => pathname.startsWith(api)) && !isLoggedIn) {
-      return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
-    }
-
-    const response = NextResponse.next()
-    
-    if (isLoggedIn && session?.user) {
-      response.headers.set('X-User-Id', session.user.id || '')
-      response.headers.set('X-User-Role', session.user.role || 'USER')
-    }
-
-    return response
-  } catch (error) {
-    console.error('Middleware error:', error)
-    return NextResponse.json({ error: 'Internal error' }, { status: 500 })
+  // Redirect non-logged-in users from protected pages
+  if (pathname.startsWith('/dashboard') && !isLoggedIn) {
+    return NextResponse.redirect(new URL('/auth/sign-in', request.url))
   }
+
+  // Protect API routes (basic check)
+  if (pathname.startsWith('/api/admin') && !isLoggedIn) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  return NextResponse.next()
 }
 
 export const config = {
-  matcher: '/api/:path*'
+  matcher: [
+    '/auth/sign-in',
+    '/auth/sign-up',
+    '/dashboard/:path*',
+    '/api/admin/:path*',
+    '/api/checkout/:path*',    // ← Add these
+    '/api/orders/:path*',       // ← Add these
+    '/api/profile/:path*',      // ← Add these
+  ]
 }
