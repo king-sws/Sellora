@@ -6,8 +6,8 @@ import { AuthLayout } from '@/components/auth/AuthLayout'
 import { SignInForm } from '@/components/auth/SignInForm'
 
 export const metadata: Metadata = {
-  title: 'Sign In | Acme',
-  description: 'Sign in to your Acme account',
+  title: 'Sign In | Sellora',
+  description: 'Sign in to your Sellora account',
   robots: {
     index: false,
     follow: false,
@@ -15,10 +15,11 @@ export const metadata: Metadata = {
 }
 
 export default async function SignInPage() {
-  // Redirect if already authenticated
   const session = await auth()
+  
+  // ✅ Redirect based on role
   if (session?.user) {
-    redirect('/dashboard')
+    redirect(session.user.role === 'ADMIN' ? '/dashboard' : '/')
   }
 
   return (
@@ -26,7 +27,7 @@ export default async function SignInPage() {
       title="Welcome back"
       subtitle={
         <>
-          Sign in to your account to continue where you left off.{' '}
+          Sign in to access your orders and continue shopping.{` `}
           <span className="hidden sm:inline">
             Secure, fast, and reliable.
           </span>

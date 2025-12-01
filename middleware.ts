@@ -1,23 +1,25 @@
 // middleware.ts
-import { auth } from '@/auth'
 import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
-export default auth((req) => {
-  const { nextUrl, auth: session } = req
-  const pathname = nextUrl.pathname
-  const isLoggedIn = !!session?.user
-  const isAdmin = session?.user?.role === 'ADMIN'
+export async function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname
 
-  // ==================== AUTH ROUTES ====================
-  // Redirect logged-in users away from sign-in/sign-up
-  if ((pathname === '/auth/sign-in' || pathname === '/auth/sign-up') && isLoggedIn) {
-    return NextResponse.redirect(new URL(isAdmin ? '/dashboard' : '/', nextUrl))
+  // Only protect API routes in middleware
+  if (!pathname.startsWith('/api/')) {
+    return NextResponse.next()
   }
 
-  // ==================== API PROTECTION ====================
-  if (pathname.startsWith('/api/')) {
+  try {
+    // ✅ Dynamic import - only loads when API route is hit
+    const { auth } = await import('@/auth')
+    const session = await auth()
+    
+    const isLoggedIn = !!session?.user
+    const isAdmin = session?.user?.role === 'ADMIN'
+
     // Admin API routes
-    if ((pathname.startsWith('/api/admin') || pathname.startsWith('/api/dashboard'))) {
+    if (pathname.startsWith('/api/admin') || pathname.startsWith('/api/dashboard')) {
       if (!isLoggedIn) {
         return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
       }
@@ -31,32 +33,21 @@ export default auth((req) => {
     if (protectedApis.some(api => pathname.startsWith(api)) && !isLoggedIn) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
     }
+
+    const response = NextResponse.next()
+    
+    if (isLoggedIn && session?.user) {
+      response.headers.set('X-User-Id', session.user.id || '')
+      response.headers.set('X-User-Role', session.user.role || 'USER')
+    }
+
+    return response
+  } catch (error) {
+    console.error('Middleware error:', error)
+    return NextResponse.json({ error: 'Internal error' }, { status: 500 })
   }
+}
 
-  // ==================== ADD USER HEADERS ====================
-  const response = NextResponse.next()
-  
-  if (isLoggedIn && session?.user) {
-    response.headers.set('X-User-Id', session.user.id || '')
-    response.headers.set('X-User-Role', session.user.role || 'USER')
-  }
-
-  return response
-})
-
-// ==================== MATCHER CONFIG ====================
-// Only run middleware on routes that need auth checks
 export const config = {
-  matcher: [
-    // Auth pages
-    '/auth/sign-in',
-    '/auth/sign-up',
-    // Protected API routes
-    '/api/admin/:path*',
-    '/api/dashboard/:path*',
-    '/api/checkout/:path*',
-    '/api/orders/:path*',
-    '/api/profile/:path*',
-    '/api/addresses/:path*',
-  ]
+  matcher: '/api/:path*'
 }

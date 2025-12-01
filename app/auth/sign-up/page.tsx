@@ -6,8 +6,8 @@ import { AuthLayout } from '@/components/auth/AuthLayout'
 import { SignUpForm } from '@/components/auth/SignUpForm'
 
 export const metadata: Metadata = {
-  title: 'Create Account | Acme',
-  description: 'Create your Acme account and get started in minutes',
+  title: 'Create Account | Sellora',
+  description: 'Create your Sellora account and get started in minutes',
   robots: {
     index: false,
     follow: false,
@@ -15,10 +15,11 @@ export const metadata: Metadata = {
 }
 
 export default async function SignUpPage() {
-  // Redirect if already authenticated
   const session = await auth()
+  
+  // ✅ Redirect based on role
   if (session?.user) {
-    redirect('/dashboard')
+    redirect(session.user.role === 'ADMIN' ? '/dashboard' : '/')
   }
 
   return (
@@ -26,9 +27,9 @@ export default async function SignUpPage() {
       title="Create your account"
       subtitle={
         <>
-          Join thousands of teams already using Acme to streamline their workflow.{' '}
+          Create your Sellora account to shop faster and track all your orders.{' '}
           <span className="hidden sm:inline">
-            Free to start, no credit card required.
+            Fast, secure, and completely free.
           </span>
         </>
       }
