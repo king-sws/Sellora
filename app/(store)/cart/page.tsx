@@ -316,17 +316,7 @@ export default function CartPage() {
               </div>
             </Card>
 
-            {/* Mobile Trust Badges */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className="mt-6 lg:hidden space-y-3"
-            >
-              <TrustBadge icon={Shield} text="Secure payment processing" />
-              <TrustBadge icon={Truck} text="Free shipping over $50" />
-              <TrustBadge icon={Package} text="30-day return policy" />
-            </motion.div>
+            
           </motion.div>
 
           {/* Cart Summary - Sticky on desktop */}
@@ -339,15 +329,6 @@ export default function CartPage() {
             <div className="lg:sticky lg:top-8 space-y-4">
               <CartSummary cart={cart} />
               
-              {/* Desktop Trust Badges */}
-              {/* <Card className="p-4 sm:p-6 hidden lg:block shadow-lg">
-                <h3 className="font-semibold mb-4 text-sm">Why shop with us?</h3>
-                <div className="space-y-3">
-                  <TrustBadge icon={Shield} text="Secure payment processing" />
-                  <TrustBadge icon={Truck} text="Free shipping over $50" />
-                  <TrustBadge icon={Package} text="30-day return policy" />
-                </div>
-              </Card> */}
             </div>
           </motion.div>
         </div>

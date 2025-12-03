@@ -179,20 +179,20 @@ const POPULAR_CATEGORIES = [
 // Top Notice Component
 const TopNotice: React.FC<{ message: string }> = ({ message }) => {
   const [isVisible, setIsVisible] = React.useState(true)
-
+  
   if (!isVisible) return null
-
+  
   return (
-    <div className="bg-primary text-primary-foreground text-center py-2 text-xs sm:text-sm font-medium flex items-center justify-center relative px-4">
-      <div className="flex items-center gap-1.5 sm:gap-2">
-        <Megaphone className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+    <div className="bg-primary text-primary-foreground text-center py-2 md:py-2.5 text-xs sm:text-sm font-medium flex items-center justify-center relative px-8 sm:px-10 md:px-12">
+      <div className="flex items-center gap-1.5 sm:gap-2 max-w-full overflow-hidden">
+        <Megaphone className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
         <span className="truncate">{message}</span>
       </div>
       <Button
         variant="ghost"
         size="icon"
         onClick={() => setIsVisible(false)}
-        className="absolute right-1 sm:right-2 h-6 w-6 sm:h-7 sm:w-7 text-primary-foreground/80 hover:bg-primary/80 hover:text-primary-foreground"
+        className="absolute right-1 sm:right-2 h-6 w-6 sm:h-7 sm:w-7 text-primary-foreground/80 hover:bg-primary/80 hover:text-primary-foreground transition-colors flex-shrink-0"
         aria-label="Close notice"
       >
         <X className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
@@ -1208,7 +1208,7 @@ export const StoreHeader: React.FC<HeaderProps> = ({ className, session: serverS
 
   return (
     <>
-      <TopNotice message="🎉 Free shipping on orders over $50! Limited time offer." />
+      <TopNotice message="🚀 Sellora is a production-ready e-commerce platform. This temporary deployment is running on the Vercel free tier until the official domain goes live." />
 
       {/* Compact Header - Shows on scroll up (eBay style) */}
       <div 

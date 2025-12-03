@@ -14,20 +14,25 @@ import RecentlyViewedSection from "@/components/landing/RecentlyViewedSection"; 
 import HeroSection from "@/components/landing/HeroSection";
 import DiscountModal from "@/components/landing/DiscountModal";
 
+// app/page.tsx
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-white">
       <DiscountModal />
       <HeroSection />
-      <div className='px-1' >
+      <div className='px-1'>
         <PromoBanner />
       </div>
       <div className="mx-auto px-4">
-        
-        <RecentlyViewedSection /> {/* Add Recently Viewed Section here */}
+        <RecentlyViewedSection />
         <CategoriesSection />
         <BestSellersSection />
-        <ProductCarousel />
+      </div>
+      
+      {/* ProductCarousel outside the padded container */}
+      <ProductCarousel />
+      
+      <div className="mx-auto px-4">
         <DealsByBrandSection />
       </div>
       <AccessoriesHeroSection />
@@ -37,9 +42,6 @@ export default function LandingPage() {
       <div className="py-5">
         <DealHeroBanner />
       </div>
-      
-      
-      
       <AboutInfoSection />
       <NewsletterSubscription />
     </div>

@@ -152,23 +152,14 @@ useEffect(() => {
   return (
     <section className="relative w-full h-[55vh] sm:h-[50vh] md:h-[50vh] lg:h-[70vh] overflow-hidden">
   
-  {/* Background Image */}
-  {slide.backgroundImage && (
-    <div
-      className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-700"
-      style={{
-        backgroundImage: `url(${slide.backgroundImage})`,
-      }}
-    />
-  )}
-
-  {/* Background Color - only show if no background image */}
-  {!slide.backgroundImage && (
-    <div 
-      className="absolute inset-0" 
-      style={{ backgroundColor: slide.backgroundColor || '#f3f4f6' }}
-    ></div>
-  )}
+  {/* Background Layer */}
+  <div 
+    className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-700" 
+    style={{ 
+      backgroundColor: slide.backgroundColor || '#f3f4f6',
+      backgroundImage: slide.backgroundImage ? `url(${slide.backgroundImage})` : 'none'
+    }}
+  ></div>
 
  
 

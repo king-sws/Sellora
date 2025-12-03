@@ -26,6 +26,105 @@ interface Toast {
   type: 'success' | 'error' | 'info'
 }
 
+interface SmartImageProps {
+  src: string
+  alt: string
+  productName: string
+}
+function SmartProductImage({ src, alt, productName }: SmartImageProps) {
+  const [imageStyle, setImageStyle] = useState<'cover' | 'contain'>('cover')
+
+  // Check if product is likely a TV/monitor/phone based on name
+  const isVerticalProduct = useCallback(() => {
+    const name = productName.toLowerCase()
+    const keywords = ['tv']
+    return keywords.some(keyword => name.includes(keyword))
+  }, [productName])
+
+  // Detect if image has transparency or no background
+  const handleImageLoad = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
+    // If already identified as vertical product, keep contain
+    if (isVerticalProduct()) {
+      setImageStyle('contain')
+      return
+    }
+
+    const img = e.currentTarget
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+    
+    if (!ctx) return
+
+    canvas.width = img.naturalWidth
+    canvas.height = img.naturalHeight
+    
+    // Check aspect ratio - portrait images should use contain
+    const aspectRatio = canvas.width / canvas.height
+    const isPortrait = aspectRatio < 0.9
+    
+    if (isPortrait) {
+      setImageStyle('contain')
+      return
+    }
+    
+    try {
+      ctx.drawImage(img, 0, 0)
+      
+      // Sample points to check for transparency or white background
+      const checkPoints = [
+        { x: 0, y: 0 }, // top-left
+        { x: canvas.width - 1, y: 0 }, // top-right
+        { x: 0, y: canvas.height - 1 }, // bottom-left
+        { x: canvas.width - 1, y: canvas.height - 1 }, // bottom-right
+        { x: Math.floor(canvas.width / 2), y: 0 }, // top-center
+        { x: 0, y: Math.floor(canvas.height / 2) }, // left-center
+      ]
+
+      let hasTransparency = false
+      let pureWhiteCorners = 0
+
+      for (const point of checkPoints) {
+        const pixel = ctx.getImageData(point.x, point.y, 1, 1).data
+        
+        // Check for transparency
+        if (pixel[3] < 255) {
+          hasTransparency = true
+          break
+        }
+        
+        // Check for pure white or near-white
+        if (pixel[0] > 250 && pixel[1] > 250 && pixel[2] > 250) {
+          pureWhiteCorners++
+        }
+      }
+
+      // If image has transparency or mostly white corners, use contain
+      if (hasTransparency || pureWhiteCorners >= 4) {
+        setImageStyle('contain')
+      } else {
+        setImageStyle('cover')
+      }
+    } catch (err) {
+      // CORS or other error - fallback to cover
+      setImageStyle('cover')
+    }
+  }, [isVerticalProduct])
+
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      fill
+      className={`group-hover:scale-105 transition-transform duration-300 ${
+        imageStyle === 'contain' ? 'object-contain p-4' : 'object-cover'
+      }`}
+      onLoad={handleImageLoad}
+      crossOrigin="anonymous"
+      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+    />
+  )
+}
+
 // Skeleton Components
 function WishlistItemSkeleton() {
   return (
@@ -454,17 +553,16 @@ const handleAddToCart = useCallback(async (productId: string, productName: strin
                 return (
                   <div 
                     key={item.id} 
-                    className={`group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 ${
+                    className={`group bg-white rounded-lg overflow-hidden border border-gray-200 hover:shadow-lg transition-all duration-200" ${
                       isDeleting ? 'opacity-50 scale-95' : ''
                     }`}
                   >
                     {/* Product Image */}
-                    <Link href={`/products/${item.product.slug}`} className="block relative aspect-square bg-gray-100">
-                      <Image
+                    <Link href={`/products/${item.product.slug}`} className="block relative aspect-square bg-white">
+                      <SmartProductImage
                         src={item.product.images[0] || '/placeholder.png'}
                         alt={item.product.name}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        productName={item.product.name}
                       />
                       {item.product.salePrice && item.product.salePrice < item.product.price && (
                         <div className="absolute top-3 right-3 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded">
@@ -481,7 +579,7 @@ const handleAddToCart = useCallback(async (productId: string, productName: strin
                     </Link>
 
                     {/* Product Info */}
-                    <div className="p-4">
+                    <div className="p-4 border-t border-gray-100">
                       <Link 
                         href={`/products/${item.product.slug}`}
                         className="block mb-2"

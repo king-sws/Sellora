@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-unescaped-entities */
 // app/(store)/checkout/success/page.tsx - Redesigned Success Page
 'use client'
@@ -262,12 +263,42 @@ export default function CheckoutSuccessPage() {
             <div className="space-y-3 mb-4">
               {order.items.map((item) => (
                 <div key={item.id} className="flex items-center gap-4 group">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 rounded-md overflow-hidden bg-gray-100 border border-gray-200">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 rounded-md overflow-hidden bg-white border border-gray-200">
                     {item.product.images[0] && (
                       <img
                         src={item.product.images[0]}
                         alt={item.product.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                        className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-200"
+                        onLoad={(e) => {
+                          const img = e.currentTarget;
+                          const canvas = document.createElement('canvas');
+                          const ctx = canvas.getContext('2d');
+                          
+                          canvas.width = img.naturalWidth;
+                          canvas.height = img.naturalHeight;
+                          ctx?.drawImage(img, 0, 0);
+                          
+                          // Check corners for transparency/white background
+                          const corners = [
+                            ctx?.getImageData(0, 0, 1, 1).data,
+                            ctx?.getImageData(canvas.width - 1, 0, 1, 1).data,
+                            ctx?.getImageData(0, canvas.height - 1, 1, 1).data,
+                            ctx?.getImageData(canvas.width - 1, canvas.height - 1, 1, 1).data,
+                          ];
+                          
+                          const hasTransparentBg = corners.some(pixel => pixel && pixel[3] < 255);
+                          const hasWhiteBg = corners.every(pixel => 
+                            pixel && pixel[0] > 240 && pixel[1] > 240 && pixel[2] > 240
+                          );
+                          
+                          if (hasTransparentBg || hasWhiteBg) {
+                            img.style.objectFit = 'contain';
+                            img.style.padding = '8px';
+                          } else {
+                            img.style.objectFit = 'cover';
+                            img.style.padding = '0';
+                          }
+                        }}
                       />
                     )}
                   </div>

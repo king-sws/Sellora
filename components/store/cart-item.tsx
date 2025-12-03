@@ -55,7 +55,7 @@ interface CartItemProps {
   onRemoveComplete?: () => void
 }
 
-// Memoized Image Component
+// Memoized Image Component with Smart Background Detection
 const ProductImage = memo(({ 
   src, 
   alt, 
@@ -73,11 +73,69 @@ const ProductImage = memo(({
 }) => {
   const [imageError, setImageError] = useState(false)
   const [imageLoading, setImageLoading] = useState(true)
+  const [hasTransparentBg, setHasTransparentBg] = useState<boolean | null>(null)
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+
+// Detect if image has transparent or white background
+  const detectTransparency = useCallback((imgElement: HTMLImageElement) => {
+    try {
+      // Create canvas if it doesn't exist
+      if (!canvasRef.current) {
+        canvasRef.current = document.createElement('canvas')
+      }
+      
+      const canvas = canvasRef.current
+      const ctx = canvas.getContext('2d', { willReadFrequently: true })
+      if (!ctx) return
+
+      // Set canvas size to match image natural size for accurate sampling
+      canvas.width = imgElement.naturalWidth
+      canvas.height = imgElement.naturalHeight
+
+      // Draw image at full size
+      ctx.drawImage(imgElement, 0, 0)
+
+      // Sample corner pixels (4 corners)
+      const corners = [
+        ctx.getImageData(0, 0, 1, 1).data, // Top-left
+        ctx.getImageData(canvas.width - 1, 0, 1, 1).data, // Top-right
+        ctx.getImageData(0, canvas.height - 1, 1, 1).data, // Bottom-left
+        ctx.getImageData(canvas.width - 1, canvas.height - 1, 1, 1).data, // Bottom-right
+      ]
+
+      // Check for transparent background (alpha < 255)
+      const hasTransparent = corners.some(pixel => pixel[3] < 255)
+
+      // Check for white background (all corners RGB > 240)
+      const hasWhite = corners.every(pixel => 
+        pixel[0] > 240 && pixel[1] > 240 && pixel[2] > 240
+      )
+
+      // If transparent OR white background detected, use contain with padding
+      setHasTransparentBg(hasTransparent || hasWhite)
+    } catch (error) {
+      console.error('Error detecting transparency:', error)
+      // Fallback to assuming no transparency
+      setHasTransparentBg(false)
+    }
+  }, [])
+
+  const handleImageLoad = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
+    setImageLoading(false)
+    const img = e.currentTarget
+    
+    // Wait for image to be fully loaded
+    if (img.complete && img.naturalWidth > 0) {
+      detectTransparency(img)
+    }
+  }, [detectTransparency])
 
   return (
     <Link 
       href={`/products/${slug}`}
-      className="relative flex-shrink-0 w-full sm:w-32 h-40 sm:h-32 bg-muted rounded-lg overflow-hidden group"
+      className={cn(
+        "relative flex-shrink-0 w-full sm:w-32 h-40 sm:h-32 bg-white rounded-lg overflow-hidden group transition-colors duration-300",
+      )}
     >
       {imageLoading && (
         <Skeleton className="w-full h-full absolute inset-0" />
@@ -90,24 +148,26 @@ const ProductImage = memo(({
           fill
           sizes="(max-width: 640px) 100vw, 128px"
           className={cn(
-            "object-cover group-hover:scale-105 transition-transform duration-300",
-            imageLoading && "opacity-0"
+            "group-hover:scale-105 transition-transform duration-300",
+            imageLoading && "opacity-0",
+            hasTransparentBg ? "object-contain p-3" : "object-cover" // Smart object-fit based on background
           )}
-          onLoad={() => setImageLoading(false)}
+          onLoad={handleImageLoad}
           onError={() => {
             setImageError(true)
             setImageLoading(false)
           }}
           priority={false}
+          crossOrigin="anonymous" // Required for canvas pixel access
         />
       ) : (
-        <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+        <div className="w-full h-full flex items-center justify-center text-muted-foreground bg-muted">
           <ImageIcon className="w-8 h-8" />
         </div>
       )}
       
       {hasDiscount && (
-        <Badge className="absolute top-2 left-2 bg-destructive text-destructive-foreground shadow-lg">
+        <Badge className="absolute top-2 left-2 bg-destructive text-destructive-foreground shadow-lg z-10">
           -{discountPercent}%
         </Badge>
       )}
@@ -116,7 +176,7 @@ const ProductImage = memo(({
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="absolute inset-0 bg-black/60 flex items-center justify-center backdrop-blur-sm"
+          className="absolute inset-0 bg-black/60 flex items-center justify-center backdrop-blur-sm z-10"
         >
           <span className="text-white font-semibold text-sm">Out of Stock</span>
         </motion.div>
@@ -340,8 +400,8 @@ export const CartItem = memo(({ item, compact = false, onRemoveComplete }: CartI
                 src={product.images[0]}
                 alt={product.name}
                 fill
+                className="object-contain group-hover:scale-105 transition-transform"
                 sizes="64px"
-                className="object-cover group-hover:scale-105 transition-transform"
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center">

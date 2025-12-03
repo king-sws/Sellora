@@ -183,7 +183,7 @@ export function ProductCard({ product, viewMode = 'grid' }: ProductCardProps) {
     }
   };
 
-  // Grid View - eBay Style with proper grid structure
+  // Grid View - Always use card layout (mobile-friendly)
   if (viewMode === 'grid') {
     return (
       <div className="group bg-white dark:bg-gray-900 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-800 hover:shadow-md transition-shadow duration-200">
@@ -319,86 +319,108 @@ export function ProductCard({ product, viewMode = 'grid' }: ProductCardProps) {
     );
   }
 
-  // List View - Detailed Horizontal Layout
+  // List View - Card layout on mobile, horizontal on desktop
   return (
-    <div className="group bg-white dark:bg-gray-900 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-800 hover:shadow-lg transition-shadow ">
+    <div className="group bg-white dark:bg-gray-900 rounded-lg md:rounded-xl overflow-hidden border border-gray-200 dark:border-gray-800 hover:shadow-md md:hover:shadow-lg transition-shadow">
       <Link href={`/products/${product.slug}`} className="block">
-        <div className="grid grid-cols-[192px_1fr] gap-4 p-4">
+        {/* Mobile: Card Layout, Desktop: Horizontal Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-[192px_1fr] gap-0 md:gap-4 p-0 md:p-4">
           
-          {/* Image Column */}
-          <div className="relative w-48 h-48 flex-shrink-0 overflow-hidden rounded-lg bg-gray-50 dark:bg-gray-800">
+          {/* Image Section */}
+          <div className={`relative w-full md:w-48 aspect-square md:h-48 flex-shrink-0 overflow-hidden md:rounded-lg ${
+            imageStyle === 'contain' ? 'bg-white dark:bg-gray-900' : 'bg-gray-50 dark:bg-gray-800'
+          }`}>
             <Image
               src={product.images[0] || '/placeholder.png'}
               alt={product.name}
               fill
-              className={`group-hover:scale-105 transition-transform duration-500 ${
-                imageStyle === 'contain' ? 'object-contain p-4' : 'object-cover'
+              className={`group-hover:scale-105 transition-transform duration-300 md:duration-500 ${
+                imageStyle === 'contain' ? 'object-contain p-3 md:p-4' : 'object-cover'
               }`}
-              sizes="192px"
+              sizes="(max-width: 768px) 100vw, 192px"
               onLoad={handleImageLoad}
               crossOrigin="anonymous"
             />
             
             {discountPercent > 0 && (
-              <div className="absolute top-2 left-2 bg-red-600 text-white px-2.5 py-1 rounded-md text-xs font-bold shadow-md z-10">
-                SAVE {discountPercent}%
+              <div className="absolute top-2 left-2 bg-red-600 text-white px-2 md:px-2.5 py-0.5 md:py-1 rounded md:rounded-md text-[10px] md:text-xs font-bold shadow-sm md:shadow-md z-10">
+                {/* Mobile: -X%, Desktop: SAVE X% */}
+                <span className="md:hidden">-{discountPercent}%</span>
+                <span className="hidden md:inline">SAVE {discountPercent}%</span>
               </div>
             )}
 
             {isOutOfStock && (
-              <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-10">
-                <span className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg">
+              <div className="absolute inset-0 bg-black/50 md:bg-black/60 backdrop-blur-[1px] md:backdrop-blur-sm flex items-center justify-center z-10">
+                <span className="bg-gray-900 text-white px-3 md:px-4 py-1.5 md:py-2 rounded-md md:rounded-lg text-xs md:text-sm font-semibold md:font-bold shadow-sm md:shadow-lg">
                   Out of Stock
                 </span>
               </div>
             )}
+
+            {/* Wishlist Button - Only show on desktop in list view */}
+            <div 
+              className="hidden md:block absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            >
+              <EnhancedWishlistButton
+                productId={product.id}
+                size="sm"
+                variant="ghost"
+                iconOnly={true}
+                className="w-7 h-7 rounded-full bg-white/95 dark:bg-gray-800/95 shadow-sm hover:shadow-md hover:scale-110 transition-all border border-gray-200/50 dark:border-gray-700/50"
+              />
+            </div>
           </div>
 
-          {/* Product Details Column - Grid Layout */}
-          <div className="flex flex-col justify-between min-w-0">
+          {/* Product Details */}
+          <div className="flex flex-col justify-between min-w-0 p-3 md:p-0">
             <div className="grid gap-2">
               
-              {/* Category Row */}
+              {/* Category - Desktop only */}
               {product.category && (
-                <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                <p className="hidden md:block text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                   {product.category.name}
                 </p>
               )}
 
-              {/* Product Name Row */}
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-gray-900 dark:group-hover:text-white transition-colors line-clamp-2">
+              {/* Product Name */}
+              <h3 className="text-sm md:text-lg font-medium md:font-semibold text-gray-700 md:text-gray-900 dark:text-gray-300 md:dark:text-white group-hover:text-gray-900 dark:group-hover:text-white transition-colors line-clamp-2 leading-snug">
                 {product.name}
               </h3>
 
-              {/* Rating Row */}
+              {/* Rating */}
               {product.rating > 0 && (
                 <div>
                   <StarRating rating={product.rating} reviewCount={product.reviewCount} />
                 </div>
               )}
 
-              {/* Price Row */}
+              {/* Price */}
               <div className="flex items-baseline gap-2">
-                <span className="text-2xl font-bold text-gray-900 dark:text-white">
+                <span className="text-lg md:text-2xl font-bold text-gray-900 dark:text-white">
                   ${product.price.toFixed(2)}
                 </span>
                 {product.comparePrice && product.comparePrice > product.price && (
-                  <span className="text-sm text-gray-500 dark:text-gray-400 line-through">
+                  <span className="text-xs md:text-sm text-gray-400 md:text-gray-500 dark:text-gray-400 line-through">
                     ${product.comparePrice.toFixed(2)}
                   </span>
                 )}
               </div>
 
-              {/* Stock Status Row */}
+              {/* Stock Status */}
               {isLowStock && !isOutOfStock && (
-                <p className="text-sm text-orange-600 dark:text-orange-400 font-medium">
-                  Only {product.stock} left in stock
+                <p className="text-xs md:text-sm text-orange-600 dark:text-orange-400 font-medium">
+                  Only {product.stock} left<span className="hidden md:inline"> in stock</span>
                 </p>
               )}
             </div>
 
-            {/* Actions Row */}
-            <div className="grid grid-cols-[auto_1fr] gap-3 mt-4">
+            {/* Actions - Desktop only shows full layout */}
+            <div className="hidden md:grid md:grid-cols-[auto_1fr] gap-3 mt-4">
               <Button
                 onClick={addToCart}
                 disabled={isOutOfStock || addingToCart}
@@ -436,6 +458,35 @@ export function ProductCard({ product, viewMode = 'grid' }: ProductCardProps) {
                   className="h-full"
                 />
               </div>
+            </div>
+
+            {/* Mobile Actions - Show compact button */}
+            <div className="md:hidden mt-3 pt-3 border-t border-gray-200 dark:border-gray-800">
+              <Button
+                onClick={addToCart}
+                disabled={isOutOfStock || addingToCart}
+                className="w-full h-9 text-sm font-medium rounded-md disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-400 transition-colors"
+                size="sm"
+              >
+                {addingToCart ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Adding...
+                  </>
+                ) : justAdded ? (
+                  <>
+                    <Check className="h-4 w-4 mr-2" />
+                    Added!
+                  </>
+                ) : isOutOfStock ? (
+                  "Out of Stock"
+                ) : (
+                  <>
+                    <ShoppingCart className="h-4 w-4 mr-2" />
+                    Add to Cart
+                  </>
+                )}
+              </Button>
             </div>
           </div>
         </div>

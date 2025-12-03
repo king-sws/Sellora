@@ -385,38 +385,41 @@ export default function CheckoutPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Checkout</h1>
-          <p className="text-gray-600 mt-2">Complete your order ({cart.items.length} {cart.items.length === 1 ? 'item' : 'items'})</p>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Checkout</h1>
+          <p className="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2">
+            Complete your order ({cart.items.length} {cart.items.length === 1 ? 'item' : 'items'})
+          </p>
         </div>
 
         {error && (
-          <Alert variant="destructive" className="mb-6">
+          <Alert variant="destructive" className="mb-4 sm:mb-6">
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
 
-        <div className="mb-8">
-          <div className="flex items-center justify-center space-x-8">
+        {/* Progress Steps - Horizontal on desktop, simplified on mobile */}
+        <div className="mb-6 sm:mb-8 overflow-x-auto">
+          <div className="flex items-center justify-center space-x-4 sm:space-x-8 min-w-max px-4 sm:px-0">
             <div className="flex items-center text-blue-600">
-              <div className="w-8 h-8 rounded-full border-2 border-blue-600 bg-blue-600 text-white flex items-center justify-center mr-3">
-                <MapPin className="w-4 h-4" />
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-blue-600 bg-blue-600 text-white flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0">
+                <MapPin className="w-3 h-3 sm:w-4 sm:h-4" />
               </div>
-              <span className="font-medium">Shipping</span>
+              <span className="font-medium text-sm sm:text-base">Shipping</span>
             </div>
             <div className="flex items-center text-gray-400">
-              <div className="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center mr-3">
-                <CreditCard className="w-4 h-4" />
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-gray-300 flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0">
+                <CreditCard className="w-3 h-3 sm:w-4 sm:h-4" />
               </div>
-              <span className="font-medium">Payment</span>
+              <span className="font-medium text-sm sm:text-base">Payment</span>
             </div>
             <div className="flex items-center text-gray-400">
-              <div className="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center mr-3">
-                <ShoppingBag className="w-4 h-4" />
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-gray-300 flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0">
+                <ShoppingBag className="w-3 h-3 sm:w-4 sm:h-4" />
               </div>
-              <span className="font-medium">Review</span>
+              <span className="font-medium text-sm sm:text-base">Review</span>
             </div>
           </div>
         </div>
@@ -424,15 +427,15 @@ export default function CheckoutPage() {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="lg:grid lg:grid-cols-12 lg:gap-8">
             <div className="lg:col-span-8">
-              <Card className="mb-6">
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Truck className="w-5 h-5 mr-2" />
+              <Card className="mb-4 sm:mb-6">
+                <CardHeader className="px-4 sm:px-6">
+                  <CardTitle className="flex items-center text-lg sm:text-xl">
+                    <Truck className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                     Shipping Information
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="mb-6 flex items-center space-x-2">
+                <CardContent className="px-4 sm:px-6">
+                  <div className="mb-4 sm:mb-6 flex items-center space-x-2">
                     <Checkbox
                       id="useNewAddress"
                       checked={useNewAddress}
@@ -448,33 +451,33 @@ export default function CheckoutPage() {
 
                   {useNewAddress ? (
                     <div className="space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label htmlFor="firstName">First Name *</Label>
+                          <Label htmlFor="firstName" className="text-sm">First Name *</Label>
                           <Input
                             id="firstName"
                             {...register('firstName')}
                             className={errors.firstName ? 'border-red-500' : ''}
                           />
                           {errors.firstName && (
-                            <p className="text-red-500 text-sm mt-1">{errors.firstName.message}</p>
+                            <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.firstName.message}</p>
                           )}
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="lastName">Last Name *</Label>
+                          <Label htmlFor="lastName" className="text-sm">Last Name *</Label>
                           <Input
                             id="lastName"
                             {...register('lastName')}
                             className={errors.lastName ? 'border-red-500' : ''}
                           />
                           {errors.lastName && (
-                            <p className="text-red-500 text-sm mt-1">{errors.lastName.message}</p>
+                            <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.lastName.message}</p>
                           )}
                         </div>
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="address1">Address *</Label>
+                        <Label htmlFor="address1" className="text-sm">Address *</Label>
                         <Input
                           id="address1"
                           {...register('address1')}
@@ -482,70 +485,70 @@ export default function CheckoutPage() {
                           className={errors.address1 ? 'border-red-500' : ''}
                         />
                         {errors.address1 && (
-                          <p className="text-red-500 text-sm mt-1">{errors.address1.message}</p>
+                          <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.address1.message}</p>
                         )}
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="address2">Apartment, suite, etc. (Optional)</Label>
+                        <Label htmlFor="address2" className="text-sm">Apartment, suite, etc. (Optional)</Label>
                         <Input
                           id="address2"
                           {...register('address2')}
                         />
                       </div>
 
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label htmlFor="city">City *</Label>
+                          <Label htmlFor="city" className="text-sm">City *</Label>
                           <Input
                             id="city"
                             {...register('city')}
                             className={errors.city ? 'border-red-500' : ''}
                           />
                           {errors.city && (
-                            <p className="text-red-500 text-sm mt-1">{errors.city.message}</p>
+                            <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.city.message}</p>
                           )}
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="state">State *</Label>
+                          <Label htmlFor="state" className="text-sm">State *</Label>
                           <Input
                             id="state"
                             {...register('state')}
                             className={errors.state ? 'border-red-500' : ''}
                           />
                           {errors.state && (
-                            <p className="text-red-500 text-sm mt-1">{errors.state.message}</p>
+                            <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.state.message}</p>
                           )}
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label htmlFor="zipCode">ZIP Code *</Label>
+                          <Label htmlFor="zipCode" className="text-sm">ZIP Code *</Label>
                           <Input
                             id="zipCode"
                             {...register('zipCode')}
                             className={errors.zipCode ? 'border-red-500' : ''}
                           />
                           {errors.zipCode && (
-                            <p className="text-red-500 text-sm mt-1">{errors.zipCode.message}</p>
+                            <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.zipCode.message}</p>
                           )}
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="country">Country *</Label>
+                          <Label htmlFor="country" className="text-sm">Country *</Label>
                           <Input
                             id="country"
                             {...register('country')}
                             className={errors.country ? 'border-red-500' : ''}
                           />
                           {errors.country && (
-                            <p className="text-red-500 text-sm mt-1">{errors.country.message}</p>
+                            <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.country.message}</p>
                           )}
                         </div>
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="phone">Phone (Optional)</Label>
+                        <Label htmlFor="phone" className="text-sm">Phone (Optional)</Label>
                         <Input
                           id="phone"
                           {...register('phone')}
@@ -577,13 +580,15 @@ export default function CheckoutPage() {
                   ) : (
                     <div>
                       {addresses.length === 0 ? (
-                        <div className="text-center py-8">
-                          <MapPin className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                          <p className="text-gray-600 mb-4">No saved addresses</p>
+                        <div className="text-center py-6 sm:py-8">
+                          <MapPin className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400 mx-auto mb-3" />
+                          <p className="text-sm sm:text-base text-gray-600 mb-4">No saved addresses</p>
                           <Button
                             type="button"
                             variant="outline"
                             onClick={() => setValue('useNewAddress', true)}
+                            size="sm"
+                            className="text-sm"
                           >
                             <Plus className="w-4 h-4 mr-2" />
                             Add New Address
@@ -598,7 +603,7 @@ export default function CheckoutPage() {
                             {addresses.map((address) => (
                               <div
                                 key={address.id}
-                                className={`border rounded-lg p-4 relative transition-all ${
+                                className={`border rounded-lg p-3 sm:p-4 relative transition-all ${
                                   selectedAddressId === address.id ? 'border-blue-600 bg-blue-50 ring-2 ring-blue-200' : 'border-gray-200 hover:border-gray-300'
                                 }`}
                               >
@@ -606,31 +611,31 @@ export default function CheckoutPage() {
                                   <RadioGroupItem
                                     value={address.id}
                                     id={address.id}
-                                    className="mt-1"
+                                    className="mt-1 flex-shrink-0"
                                   />
-                                  <div className="ml-3 flex-1">
+                                  <div className="ml-3 flex-1 min-w-0">
                                     <label htmlFor={address.id} className="cursor-pointer">
-                                      <div className="flex items-center gap-2 mb-1">
-                                        <p className="font-medium">
+                                      <div className="flex items-center gap-2 mb-1 flex-wrap">
+                                        <p className="font-medium text-sm sm:text-base">
                                           {address.firstName} {address.lastName}
                                         </p>
                                         {address.isDefault && (
                                           <Badge variant="secondary" className="text-xs">Default</Badge>
                                         )}
                                       </div>
-                                      <p className="text-sm text-gray-600">
+                                      <p className="text-xs sm:text-sm text-gray-600 break-words">
                                         {address.address1}
                                         {address.address2 && `, ${address.address2}`}
                                       </p>
-                                      <p className="text-sm text-gray-600">
+                                      <p className="text-xs sm:text-sm text-gray-600">
                                         {address.city}, {address.state} {address.zipCode}
                                       </p>
-                                      <p className="text-sm text-gray-600">{address.country}</p>
+                                      <p className="text-xs sm:text-sm text-gray-600">{address.country}</p>
                                       {address.phone && (
-                                        <p className="text-sm text-gray-600">{address.phone}</p>
+                                        <p className="text-xs sm:text-sm text-gray-600">{address.phone}</p>
                                       )}
                                     </label>
-                                    <div className="flex gap-2 mt-3">
+                                    <div className="flex flex-wrap gap-2 mt-3">
                                       {!address.isDefault && (
                                         <Button
                                           type="button"
@@ -638,9 +643,11 @@ export default function CheckoutPage() {
                                           size="sm"
                                           onClick={() => handleSetDefaultAddress(address.id)}
                                           disabled={savingAddressId === address.id}
+                                          className="text-xs sm:text-sm h-8"
                                         >
                                           <Save className="w-3 h-3 mr-1" />
-                                          Set as Default
+                                          <span className="hidden xs:inline">Set as Default</span>
+                                          <span className="xs:hidden">Default</span>
                                         </Button>
                                       )}
                                       <Button
@@ -649,6 +656,7 @@ export default function CheckoutPage() {
                                         size="sm"
                                         onClick={() => setDeletingAddressId(address.id)}
                                         disabled={savingAddressId === address.id}
+                                        className="text-xs sm:text-sm h-8"
                                       >
                                         <Trash2 className="w-3 h-3 mr-1" />
                                         Delete
@@ -662,36 +670,37 @@ export default function CheckoutPage() {
                         </RadioGroup>
                       )}
                       {errors.shippingAddressId && (
-                        <p className="text-red-500 text-sm mt-2">{errors.shippingAddressId.message}</p>
+                        <p className="text-red-500 text-xs sm:text-sm mt-2">{errors.shippingAddressId.message}</p>
                       )}
                     </div>
                   )}
 
-                  <div className="mt-6 space-y-2">
-                    <Label htmlFor="notes">Order Notes (Optional)</Label>
+                  <div className="mt-4 sm:mt-6 space-y-2">
+                    <Label htmlFor="notes" className="text-sm">Order Notes (Optional)</Label>
                     <Textarea
                       id="notes"
                       {...register('notes')}
                       rows={3}
                       placeholder="Special delivery instructions..."
+                      className="text-sm"
                     />
                   </div>
                 </CardContent>
               </Card>
 
               <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <CreditCard className="w-5 h-5 mr-2" />
+                <CardHeader className="px-4 sm:px-6">
+                  <CardTitle className="flex items-center text-lg sm:text-xl">
+                    <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                     Payment Method
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="px-4 sm:px-6">
                   <Alert>
                     <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>
+                    <AlertDescription className="text-sm">
                       <strong>Payment Processing Coming Soon</strong>
-                      <p className="mt-1 text-sm">
+                      <p className="mt-1">
                         For now, orders will be created as "Payment Pending". 
                         Payment integration will be added in the next phase.
                       </p>
@@ -701,7 +710,7 @@ export default function CheckoutPage() {
               </Card>
             </div>
 
-            <div className="lg:col-span-4 mt-8 lg:mt-0">
+            <div className="lg:col-span-4 mt-6 lg:mt-0">
               <CheckoutSummary 
                 cart={cart} 
                 submitting={submitting}
@@ -711,6 +720,8 @@ export default function CheckoutPage() {
                 onCouponRemoved={handleCouponRemoved}
               />
             </div>
+
+            
           </div>
         </form>
       </div>

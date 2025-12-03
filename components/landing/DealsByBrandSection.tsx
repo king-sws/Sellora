@@ -73,7 +73,7 @@ const DealsByBrandSection = () => {
   // 🔹 Loading State
   if (loading) {
     return (
-      <section className="py-14 px-4 bg-gradient-to-b from-gray-50 to-white">
+      <section className="py-14 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
           <Header />
           {/* Mobile Slider Skeleton */}
