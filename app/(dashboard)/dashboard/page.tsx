@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/no-unescaped-entities */
 // app/(dashboard)/dashboard/page.tsx - Enhanced Version with All Improvements
@@ -352,21 +354,27 @@ export default function AdminDashboard() {
   // Error State
   if (!data) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-slate-50/50">
-        <Card className="w-full max-w-md">
-          <CardContent className="pt-6 text-center">
-            <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold mb-2">Failed to load dashboard</h2>
-            <p className="text-slate-600 mb-4">
-              Unable to fetch dashboard data. Please try again.
-            </p>
-            <Button onClick={() => fetchDashboardData()} className="w-full">
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Try Again
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
+      <div className="flex items-center justify-center min-h-screen px-4 bg-slate-50/50">
+  <Card className="w-full max-w-sm sm:max-w-md md:max-w-lg">
+    <CardContent className="pt-6 text-center">
+      <AlertCircle className="w-10 h-10 sm:w-12 sm:h-12 text-red-500 mx-auto mb-4" />
+
+      <h2 className="text-lg sm:text-xl font-semibold mb-2">
+        Failed to load dashboard
+      </h2>
+
+      <p className="text-slate-600 mb-4 text-sm sm:text-base px-2">
+        Unable to fetch dashboard data. Please try again.
+      </p>
+
+      <Button onClick={() => fetchDashboardData()} className="w-full flex items-center justify-center gap-2">
+        <RefreshCw className="w-4 h-4" />
+        Try Again
+      </Button>
+    </CardContent>
+  </Card>
+</div>
+
     )
   }
 
@@ -375,128 +383,133 @@ export default function AdminDashboard() {
       <div className="min-h-screen bg-slate-50/50">
         <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 sm:space-y-8">
           {/* Header with Enhanced Controls */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="min-w-0 flex-1">
-              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 truncate">
-                Dashboard Overview
-              </h1>
-              <div className="flex items-center gap-2 mt-1">
-                <p className="text-slate-600 text-sm sm:text-base">
-                  Welcome back! Here's what's happening with your store today.
-                </p>
-                {lastRefresh && (
-                  <span className="text-xs text-slate-400 whitespace-nowrap">
-                    Updated {formatDate(lastRefresh, 'relative')}
-                  </span>
-                )}
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-2 flex-shrink-0">
-              <Button
-                onClick={() => setShowKeyboardShortcuts(!showKeyboardShortcuts)}
-                variant="ghost"
-                size="icon"
-                title="Keyboard Shortcuts (Cmd/Ctrl + /)"
-              >
-                <Keyboard className="w-4 h-4" />
-              </Button>
-              
-              <Button
-                onClick={exportDashboard}
-                variant="outline"
-                size="sm"
-              >
-                <Download className="w-4 h-4 mr-2" />
-                Export
-              </Button>
-              
-              <Button
-                onClick={() => setAutoRefresh(!autoRefresh)}
-                variant={autoRefresh ? "default" : "outline"}
-                size="sm"
-              >
-                <Clock className="w-4 h-4 mr-2" />
-                {autoRefresh ? 'Auto' : 'Manual'}
-              </Button>
-              
-              <Button
-                onClick={() => fetchDashboardData()}
-                disabled={refreshing}
-                variant="outline"
-                size="sm"
-              >
-                <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
-                Refresh
-              </Button>
-            </div>
-          </div>
+          <div className="flex flex-col gap-4">
+  <div className="min-w-0">
+    <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 truncate">
+      Dashboard Overview
+    </h1>
+    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mt-1">
+      <p className="text-slate-600 text-sm sm:text-base">
+        Welcome back! Here's what's happening with your store today.
+      </p>
+      {lastRefresh && (
+        <span className="text-xs text-slate-400 whitespace-nowrap">
+          Updated {formatDate(lastRefresh, 'relative')}
+        </span>
+      )}
+    </div>
+  </div>
+  
+  <div className="flex items-center gap-2 overflow-x-auto pb-1">
+    <Button
+      onClick={() => setShowKeyboardShortcuts(!showKeyboardShortcuts)}
+      variant="ghost"
+      size="sm"
+      className="flex-shrink-0"
+      title="Keyboard Shortcuts (Cmd/Ctrl + /)"
+    >
+      <Keyboard className="w-4 h-4" />
+    </Button>
+    
+    <Button
+      onClick={exportDashboard}
+      variant="outline"
+      size="sm"
+      className="flex-shrink-0"
+    >
+      <Download className="w-4 h-4 sm:mr-2" />
+      <span className="hidden sm:inline">Export</span>
+    </Button>
+    
+    <Button
+      onClick={() => setAutoRefresh(!autoRefresh)}
+      variant={autoRefresh ? "default" : "outline"}
+      size="sm"
+      className="flex-shrink-0"
+    >
+      <Clock className="w-4 h-4 sm:mr-2" />
+      <span className="hidden sm:inline">{autoRefresh ? 'Auto' : 'Manual'}</span>
+    </Button>
+    
+    <Button
+      onClick={() => fetchDashboardData()}
+      disabled={refreshing}
+      variant="outline"
+      size="sm"
+      className="flex-shrink-0"
+    >
+      <RefreshCw className={`w-4 h-4 sm:mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+      <span className="hidden sm:inline">Refresh</span>
+    </Button>
+  </div>
+</div>
 
           {/* Keyboard Shortcuts Modal */}
           {showKeyboardShortcuts && (
-            <Card className="border-blue-200 bg-blue-50/50">
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm">Keyboard Shortcuts</CardTitle>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowKeyboardShortcuts(false)}
-                >
-                  <X className="w-4 h-4" />
-                </Button>
-              </CardHeader>
-              <CardContent className="grid grid-cols-2 gap-2 text-sm">
-                <div className="flex items-center gap-2">
-                  <kbd className="px-2 py-1 bg-white rounded border">⌘/Ctrl</kbd>
-                  <span>+</span>
-                  <kbd className="px-2 py-1 bg-white rounded border">R</kbd>
-                  <span className="text-slate-600">Refresh</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <kbd className="px-2 py-1 bg-white rounded border">⌘/Ctrl</kbd>
-                  <span>+</span>
-                  <kbd className="px-2 py-1 bg-white rounded border">K</kbd>
-                  <span className="text-slate-600">Search</span>
-                </div>
-              </CardContent>
-            </Card>
-          )}
+  <Card className="border-blue-200 bg-blue-50/50">
+    <CardHeader className="flex flex-row items-center justify-between pb-2 px-4 sm:px-6">
+      <CardTitle className="text-sm sm:text-base">Keyboard Shortcuts</CardTitle>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => setShowKeyboardShortcuts(false)}
+        className="h-8 w-8 p-0"
+      >
+        <X className="w-4 h-4" />
+      </Button>
+    </CardHeader>
+    <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-2 text-xs sm:text-sm px-4 sm:px-6">
+      <div className="flex items-center gap-1.5 sm:gap-2">
+        <kbd className="px-1.5 sm:px-2 py-1 bg-white rounded border text-xs">⌘/Ctrl</kbd>
+        <span>+</span>
+        <kbd className="px-1.5 sm:px-2 py-1 bg-white rounded border text-xs">R</kbd>
+        <span className="text-slate-600">Refresh</span>
+      </div>
+      <div className="flex items-center gap-1.5 sm:gap-2">
+        <kbd className="px-1.5 sm:px-2 py-1 bg-white rounded border text-xs">⌘/Ctrl</kbd>
+        <span>+</span>
+        <kbd className="px-1.5 sm:px-2 py-1 bg-white rounded border text-xs">K</kbd>
+        <span className="text-slate-600">Search</span>
+      </div>
+    </CardContent>
+  </Card>
+)}
 
-          {/* Key Metrics */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-            <StatsCard
-              title="Total Revenue"
-              value={formatPrice(data.totalRevenue)}
-              icon={DollarSign}
-              trend={data.monthlyGrowth}
-              trendLabel="vs last month"
-              color="green"
-            />
-            <StatsCard
-              title="Total Orders"
-              value={data.totalOrders.toLocaleString()}
-              icon={ShoppingCart}
-              subtitle={`${data.paidOrders} paid`}
-              color="blue"
-            />
-            <StatsCard
-              title="Total Customers"
-              value={data.totalCustomers.toLocaleString()}
-              icon={Users}
-              subtitle={`${data.newCustomersThisMonth} new this month`}
-              color="purple"
-            />
-            <StatsCard
-              title="Active Products"
-              value={`${data.activeProducts}/${data.totalProducts}`}
-              icon={Package}
-              subtitle={`${data.featuredProducts} featured`}
-              color="orange"
-            />
-          </div>
+        {/* Key Metrics */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+          <StatsCard
+            title="Total Revenue"
+            value={formatPrice(data.totalRevenue)}
+            icon={DollarSign}
+            trend={data.monthlyGrowth}
+            trendLabel="vs last month"
+            color="green"
+          />
+          <StatsCard
+            title="Total Orders"
+            value={data.totalOrders.toLocaleString()}
+            icon={ShoppingCart}
+            subtitle={`${data.paidOrders} paid`}
+            color="blue"
+          />
+          <StatsCard
+            title="Total Customers"
+            value={data.totalCustomers.toLocaleString()}
+            icon={Users}
+            subtitle={`${data.newCustomersThisMonth} new this month`}
+            color="purple"
+          />
+          <StatsCard
+            title="Active Products"
+            value={`${data.activeProducts}/${data.totalProducts}`}
+            icon={Package}
+            subtitle={`${data.featuredProducts} featured`}
+            color="orange"
+          />
+        </div>
 
           {/* Secondary Metrics */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
             <StatsCard
               title="Monthly Revenue"
               value={formatPrice(data.monthlyRevenue)}
@@ -530,106 +543,107 @@ export default function AdminDashboard() {
 
           {/* Critical Alerts */}
           {criticalAlerts.length > 0 && (
-            <Card className="border-amber-200 bg-amber-50/50">
-              <CardHeader className="pb-4">
-                <div className="flex items-center gap-2">
-                  <AlertTriangle className="w-5 h-5 text-amber-600" />
-                  <CardTitle className="text-lg text-amber-900">
-                    Critical Alerts
-                  </CardTitle>
-                  <Badge variant="secondary" className="ml-auto">
-                    {criticalAlerts.reduce((sum, alert) => sum + alert.count, 0)} items
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {criticalAlerts.map((alert) => {
-                    const colorClasses = getAlertColorClasses(alert.color)
-                    return (
-                      <Link 
-                        key={alert.type}
-                        href={alert.href}
-                        className="group"
-                      >
-                        <Alert className={`transition-all duration-200 cursor-pointer hover:shadow-md ${colorClasses.border} ${colorClasses.bg}`}>
-                          <alert.icon className={`h-4 w-4 ${colorClasses.icon}`} />
-                          <AlertDescription className="ml-2">
-                            <div className={`font-medium ${colorClasses.text}`}>
-                              {alert.count} {alert.title}
-                            </div>
-                            <div className={`text-sm ${colorClasses.subtext}`}>
-                              {alert.description}
-                            </div>
-                          </AlertDescription>
-                        </Alert>
-                      </Link>
-                    )
-                  })}
-                </div>
-              </CardContent>
-            </Card>
-          )}
+  <Card className="border-amber-200 bg-amber-50/50">
+    <CardHeader className="pb-3 sm:pb-4 px-4 sm:px-6">
+      <div className="flex items-center gap-2">
+        <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 flex-shrink-0" />
+        <CardTitle className="text-base sm:text-lg text-amber-900 min-w-0 truncate">
+          Critical Alerts
+        </CardTitle>
+        <Badge variant="secondary" className="ml-auto flex-shrink-0 text-xs">
+          {criticalAlerts.reduce((sum, alert) => sum + alert.count, 0)} items
+        </Badge>
+      </div>
+    </CardHeader>
+    <CardContent className="px-4 sm:px-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3">
+        {criticalAlerts.map((alert) => {
+          const colorClasses = getAlertColorClasses(alert.color)
+          return (
+            <Link 
+              key={alert.type}
+              href={alert.href}
+              className="group"
+            >
+              <Alert className={`transition-all duration-200 cursor-pointer hover:shadow-md ${colorClasses.border} ${colorClasses.bg}`}>
+                <alert.icon className={`h-4 w-4 flex-shrink-0 ${colorClasses.icon}`} />
+                <AlertDescription className="ml-2 min-w-0">
+                  <div className={`font-medium text-sm sm:text-base ${colorClasses.text}`}>
+                    {alert.count} {alert.title}
+                  </div>
+                  <div className={`text-xs sm:text-sm ${colorClasses.subtext} line-clamp-2`}>
+                    {alert.description}
+                  </div>
+                </AlertDescription>
+              </Alert>
+            </Link>
+          )
+        })}
+      </div>
+    </CardContent>
+  </Card>
+)}
 
           {/* Order Status Pipeline */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Truck className="w-5 h-5 text-slate-600" />
+              <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-slate-600" />
                 Order Pipeline
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+            <CardContent className="p-3 sm:p-4 md:p-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3 md:gap-4">
                 <Link href="/dashboard/orders?status=PENDING" className="group">
-                  <div className="text-center p-4 bg-yellow-50 rounded-lg border border-yellow-200 transition-all hover:shadow-md hover:border-yellow-300">
-                    <Timer className="w-6 h-6 mx-auto mb-2 text-yellow-600 group-hover:scale-110 transition-transform" />
-                    <div className="text-2xl font-bold text-yellow-900">{data.pendingOrders}</div>
+                  <div className="text-center p-3 sm:p-4 bg-yellow-50 rounded-lg border border-yellow-200 transition-all hover:shadow-md hover:border-yellow-300">
+                    <Timer className="w-5 h-5 sm:w-6 sm:h-6 mx-auto mb-2 text-yellow-600 group-hover:scale-110 transition-transform" />
+                    <div className="text-xl sm:text-2xl font-bold text-yellow-900">{data.pendingOrders}</div>
                     <div className="text-xs text-yellow-700">Pending</div>
                   </div>
                 </Link>
                 
                 <Link href="/dashboard/orders?status=PROCESSING" className="group">
-                  <div className="text-center p-4 bg-blue-50 rounded-lg border border-blue-200 transition-all hover:shadow-md hover:border-blue-300">
-                    <Package className="w-6 h-6 mx-auto mb-2 text-blue-600 group-hover:scale-110 transition-transform" />
-                    <div className="text-2xl font-bold text-blue-900">{data.processingOrders}</div>
+                  <div className="text-center p-3 sm:p-4 bg-blue-50 rounded-lg border border-blue-200 transition-all hover:shadow-md hover:border-blue-300">
+                    <Package className="w-5 h-5 sm:w-6 sm:h-6 mx-auto mb-2 text-blue-600 group-hover:scale-110 transition-transform" />
+                    <div className="text-xl sm:text-2xl font-bold text-blue-900">{data.processingOrders}</div>
                     <div className="text-xs text-blue-700">Processing</div>
                   </div>
                 </Link>
                 
                 <Link href="/dashboard/orders?status=SHIPPED" className="group">
-                  <div className="text-center p-4 bg-purple-50 rounded-lg border border-purple-200 transition-all hover:shadow-md hover:border-purple-300">
-                    <Truck className="w-6 h-6 mx-auto mb-2 text-purple-600 group-hover:scale-110 transition-transform" />
-                    <div className="text-2xl font-bold text-purple-900">{data.shippedOrders}</div>
+                  <div className="text-center p-3 sm:p-4 bg-purple-50 rounded-lg border border-purple-200 transition-all hover:shadow-md hover:border-purple-300">
+                    <Truck className="w-5 h-5 sm:w-6 sm:h-6 mx-auto mb-2 text-purple-600 group-hover:scale-110 transition-transform" />
+                    <div className="text-xl sm:text-2xl font-bold text-purple-900">{data.shippedOrders}</div>
                     <div className="text-xs text-purple-700">Shipped</div>
                   </div>
                 </Link>
                 
                 <Link href="/dashboard/orders?status=DELIVERED" className="group">
-                  <div className="text-center p-4 bg-green-50 rounded-lg border border-green-200 transition-all hover:shadow-md hover:border-green-300">
-                    <CheckCircle className="w-6 h-6 mx-auto mb-2 text-green-600 group-hover:scale-110 transition-transform" />
-                    <div className="text-2xl font-bold text-green-900">{data.deliveredOrders}</div>
+                  <div className="text-center p-3 sm:p-4 bg-green-50 rounded-lg border border-green-200 transition-all hover:shadow-md hover:border-green-300">
+                    <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 mx-auto mb-2 text-green-600 group-hover:scale-110 transition-transform" />
+                    <div className="text-xl sm:text-2xl font-bold text-green-900">{data.deliveredOrders}</div>
                     <div className="text-xs text-green-700">Delivered</div>
                   </div>
                 </Link>
                 
-                <Link href="/dashboard/orders?status=CANCELLED" className="group">
-                  <div className="text-center p-4 bg-red-50 rounded-lg border border-red-200 transition-all hover:shadow-md hover:border-red-300">
-                    <XCircle className="w-6 h-6 mx-auto mb-2 text-red-600 group-hover:scale-110 transition-transform" />
-                    <div className="text-2xl font-bold text-red-900">{data.cancelledOrders}</div>
+                <Link href="/dashboard/orders?status=CANCELLED" className="group col-span-2 sm:col-span-1">
+                  <div className="text-center p-3 sm:p-4 bg-red-50 rounded-lg border border-red-200 transition-all hover:shadow-md hover:border-red-300">
+                    <XCircle className="w-5 h-5 sm:w-6 sm:h-6 mx-auto mb-2 text-red-600 group-hover:scale-110 transition-transform" />
+                    <div className="text-xl sm:text-2xl font-bold text-red-900">{data.cancelledOrders}</div>
                     <div className="text-xs text-red-700">Cancelled</div>
                   </div>
                 </Link>
               </div>
               
               {data.refundRate > 0 && (
-                <div className="mt-4 p-3 bg-slate-50 rounded-lg border border-slate-200">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-slate-600">Refund Rate</span>
+                <div className="mt-3 sm:mt-4 p-2 sm:p-3 bg-slate-50 rounded-lg border border-slate-200">
+                  <div className="flex items-center justify-between text-xs sm:text-sm">
+                    <span className="text-slate-600">Refund Rate</span>
                     <span className="font-medium text-slate-900">{data.refundRate.toFixed(1)}%</span>
                   </div>
-                  <div className="flex items-center justify-between mt-1">
-                    <span className="text-sm text-slate-600">Total Refunded</span>
+                  <div className="flex items-center justify-between mt-1 text-xs sm:text-sm">
+                    <span className="text-slate-600">Total Refunded</span>
+              
                     <span className="font-medium text-slate-900">{formatPrice(data.totalRefunded)}</span>
                   </div>
                 </div>
@@ -666,407 +680,464 @@ export default function AdminDashboard() {
 
         {/* Top Performers Section - NEW */}
         <Tabs defaultValue="products" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="products">Top Products</TabsTrigger>
-            <TabsTrigger value="customers">Top Customers</TabsTrigger>
-            <TabsTrigger value="brands">Top Brands</TabsTrigger>
-            <TabsTrigger value="categories">Top Categories</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="products">
-            <Card>
-              <CardHeader>
-                <CardTitle>Best Selling Products</CardTitle>
-                <CardDescription>Products generating the most revenue</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ScrollArea className="h-96">
-                  <div className="space-y-3">
-                    {data.topSellingProducts.map((product: any, index: number) => (
-                      <div key={product.id} className="flex items-start gap-3 p-3 rounded-lg hover:bg-slate-50 transition-colors border border-slate-100">
-                        <div className="flex-shrink-0 text-lg font-bold text-slate-400 w-6 text-center">
-                          {index + 1}
-                        </div>
-                        <div className="w-14 h-14 bg-slate-100 rounded-lg overflow-hidden flex-shrink-0 border border-slate-200">
-                          {product.images?.[0] ? (
-                            <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover" />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center">
-                              <Package className="w-6 h-6 text-slate-400" />
-                            </div>
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium text-slate-900 text-sm line-clamp-2 mb-1" title={product.name}>
-                            {product.name}
-                          </p>
-                          <div className="flex flex-wrap items-center gap-1.5 text-xs text-slate-500">
-                            {product.brand && (
-                              <span className="px-2 py-0.5 bg-slate-100 rounded truncate max-w-[100px]" title={product.brand.name}>
-                                {product.brand.name}
-                              </span>
-                            )}
-                            {product.category && (
-                              <span className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded truncate max-w-[100px]" title={product.category.name}>
-                                {product.category.name}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                        <div className="text-right flex-shrink-0">
-                          <p className="font-bold text-slate-900 text-sm whitespace-nowrap">{product.totalSold} sold</p>
-                          <p className="text-xs text-slate-500 whitespace-nowrap">{formatPrice(product.totalRevenue)}</p>
-                          <Badge 
-                            variant={product.stock === 0 ? "destructive" : product.stock <= 10 ? "secondary" : "outline"} 
-                            className="mt-1 text-xs"
-                          >
-                            {product.stock} stock
-                          </Badge>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </ScrollArea>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="customers">
-            <Card>
-              <CardHeader>
-                <CardTitle>Top Customers</CardTitle>
-                <CardDescription>Customers who spent the most</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ScrollArea className="h-96">
-                  <div className="space-y-4">
-                    {data.topCustomers.map((customer: any, index: number) => (
-                      <div key={customer.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-slate-50 transition-colors">
-                        <div className="flex-shrink-0 text-lg font-bold text-slate-400 w-8">
-                          #{index + 1}
-                        </div>
-                        <Avatar className="h-12 w-12">
-                          <AvatarImage src={customer.image} />
-                          <AvatarFallback>{customer.name?.[0] || 'U'}</AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium text-slate-900 truncate">{customer.name || 'Unknown'}</p>
-                          <p className="text-sm text-slate-500 truncate">{customer.email}</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-bold text-slate-900">{formatPrice(customer.totalSpent)}</p>
-                          <p className="text-sm text-slate-500">{customer.totalOrders} orders</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </ScrollArea>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="brands">
-            <Card>
-              <CardHeader>
-                <CardTitle>Top Brands</CardTitle>
-                <CardDescription>Brands with most sales</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ScrollArea className="h-96">
-                  <div className="space-y-4">
-                    {data.topBrands.map((brand: any, index: number) => (
-                      <div key={brand.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-slate-50 transition-colors">
-                        <div className="flex-shrink-0 text-lg font-bold text-slate-400 w-8">
-                          #{index + 1}
-                        </div>
-                        <div className="w-12 h-12 bg-slate-100 rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center">
-                          {brand.logo ? (
-                            <img src={brand.logo} alt={brand.name} className="w-full h-full object-contain" />
-                          ) : (
-                            <Building2 className="w-6 h-6 text-slate-400" />
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium text-slate-900 truncate">{brand.name}</p>
-                          <p className="text-sm text-slate-500">{brand.productCount} products</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-bold text-slate-900">{brand.totalSales}</p>
-                          <p className="text-sm text-slate-500">total sales</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </ScrollArea>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="categories">
-            <Card>
-              <CardHeader>
-                <CardTitle>Top Categories</CardTitle>
-                <CardDescription>Most popular product categories</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ScrollArea className="h-96">
-                  <div className="space-y-4">
-                    {data.topCategories.map((category: any, index: number) => (
-                      <div key={category.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-slate-50 transition-colors">
-                        <div className="flex-shrink-0 text-lg font-bold text-slate-400 w-8">
-                          #{index + 1}
-                        </div>
-                        <div className="w-12 h-12 bg-slate-100 rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center">
-                          {category.image ? (
-                            <img src={category.image} alt={category.name} className="w-full h-full object-cover" />
-                          ) : (
-                            <Layers className="w-6 h-6 text-slate-400" />
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium text-slate-900 truncate">{category.name}</p>
-                          <p className="text-sm text-slate-500">{category.productCount} products</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-bold text-slate-900">{category.totalSales}</p>
-                          <p className="text-sm text-slate-500">total sales</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </ScrollArea>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-
-        {/* Recent Activity Section - NEW */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8">
-  {/* Recent Inventory Changes */}
-  <Card className="border border-slate-200 shadow-sm hover:shadow-md transition-all duration-200 rounded-2xl bg-white/80 backdrop-blur">
-    <CardHeader className="flex items-center justify-between border-b border-slate-100 pb-3">
-      <CardTitle className="flex items-center gap-2 text-slate-800 text-lg font-semibold">
-        <Archive className="w-5 h-5 text-indigo-500" />
-        Recent Inventory Changes
-      </CardTitle>
-    </CardHeader>
-    <CardContent className="p-0">
-      <ScrollArea className="h-80">
-        <div className="divide-y divide-slate-100">
-          {data.recentInventoryChanges.map((log: any) => (
-            <div
-              key={log.id}
-              className="p-4 hover:bg-indigo-50/40 transition-colors duration-200 flex items-start gap-3"
-            >
-              <div className="w-10 h-10 bg-slate-100 rounded-xl overflow-hidden flex-shrink-0 shadow-sm">
-                {log.product.images?.[0] && (
-                  <img
-                    src={log.product.images[0]}
-                    alt=""
-                    className="w-full h-full object-cover"
-                  />
-                )}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-medium text-slate-900 break-words text-sm leading-snug">
-  {log.product.name.split(' ').slice(0, 40).join(' ')}
-  {log.product.name.split(' ').length > 40 && '...'}
-</p>
-
-                {log.variant && (
-                  <p className="text-xs text-slate-500">{log.variant.name}</p>
-                )}
-                <div className="flex items-center gap-2 mt-1">
-                  <Badge
-                    variant={log.changeAmount > 0 ? 'default' : 'secondary'}
-                    className={`text-xs rounded-full ${
-                      log.changeAmount > 0
-                        ? 'bg-emerald-100 text-emerald-700'
-                        : 'bg-rose-100 text-rose-700'
-                    }`}
-                  >
-                    {log.changeAmount > 0 ? '+' : ''}
-                    {log.changeAmount}
-                  </Badge>
-                  <span className="text-xs text-slate-500">{log.reason}</span>
+  <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 h-auto sm:h-10">
+    <TabsTrigger value="products" className="text-xs sm:text-sm px-2 py-2 sm:py-2.5">
+      Top Products
+    </TabsTrigger>
+    <TabsTrigger value="customers" className="text-xs sm:text-sm px-2 py-2 sm:py-2.5">
+      Top Customers
+    </TabsTrigger>
+    <TabsTrigger value="brands" className="text-xs sm:text-sm px-2 py-2 sm:py-2.5">
+      Top Brands
+    </TabsTrigger>
+    <TabsTrigger value="categories" className="text-xs sm:text-sm px-2 py-2 sm:py-2.5">
+      Top Categories
+    </TabsTrigger>
+  </TabsList>
+  
+  <TabsContent value="products">
+    <Card>
+      <CardHeader className="px-4 sm:px-6 pb-3 sm:pb-4">
+        <CardTitle className="text-base sm:text-lg">Best Selling Products</CardTitle>
+        <CardDescription className="text-xs sm:text-sm">Products generating the most revenue</CardDescription>
+      </CardHeader>
+      <CardContent className="px-4 sm:px-6">
+        <ScrollArea className="h-96">
+          <div className="space-y-2 sm:space-y-3">
+            {data.topSellingProducts.map((product: any, index: number) => (
+              <div key={product.id} className="flex items-start gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg hover:bg-slate-50 transition-colors border border-slate-100">
+                <div className="flex-shrink-0 text-sm sm:text-lg font-bold text-slate-400 w-5 sm:w-6 text-center">
+                  {index + 1}
                 </div>
-              </div>
-              <div className="text-right">
-                <p className="text-sm font-semibold text-slate-800">
-                  {log.newStock} stock
-                </p>
-                <p className="text-xs text-slate-400">
-                  {formatDate(log.createdAt, 'short')}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </ScrollArea>
-    </CardContent>
-  </Card>
-
-  {/* Recent Reviews */}
-  <Card className="border border-slate-200 shadow-sm hover:shadow-md transition-all duration-200 rounded-2xl bg-white/80 backdrop-blur">
-    <CardHeader className="flex items-center justify-between border-b border-slate-100 pb-3">
-      <CardTitle className="flex items-center gap-2 text-slate-800 text-lg font-semibold">
-        <Star className="w-5 h-5 text-amber-500 fill-amber-500" />
-        Recent Reviews
-      </CardTitle>
-    </CardHeader>
-    <CardContent className="p-0">
-      <ScrollArea className="h-80">
-        <div className="divide-y divide-slate-100">
-          {data.recentReviews.map((review: any) => (
-            <div
-              key={review.id}
-              className="p-4 hover:bg-amber-50/40 transition-colors duration-200 flex items-start gap-3"
-            >
-              <Avatar className="h-10 w-10 border border-slate-200 shadow-sm">
-                <AvatarImage src={review.user.image} />
-                <AvatarFallback className="bg-slate-100 text-slate-700">
-                  {review.user.name?.[0] || 'U'}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <p className="font-medium text-slate-900 text-sm break-words">
-  {review.user.name.split(' ').slice(0, 40).join(' ')}
-  {review.user.name.split(' ').length > 40 && '...'}
-</p>
-
-                  <div className="flex">
-                    {Array.from({ length: review.rating }).map((_, i) => (
-                      <Star
-                        key={i}
-                        className="w-3.5 h-3.5 fill-amber-400 text-amber-400"
+                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white rounded-lg overflow-hidden flex-shrink-0 border border-slate-200">
+                  {product.images?.[0] ? (
+                    <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover  group-hover:scale-105 transition-transform duration-200"
+                        onLoad={(e) => {
+                          const img = e.currentTarget;
+                          const canvas = document.createElement('canvas');
+                          const ctx = canvas.getContext('2d');
+                          
+                          canvas.width = img.naturalWidth;
+                          canvas.height = img.naturalHeight;
+                          ctx?.drawImage(img, 0, 0);
+                          
+                          // Check corners for transparency/white background
+                          const corners = [
+                            ctx?.getImageData(0, 0, 1, 1).data,
+                            ctx?.getImageData(canvas.width - 1, 0, 1, 1).data,
+                            ctx?.getImageData(0, canvas.height - 1, 1, 1).data,
+                            ctx?.getImageData(canvas.width - 1, canvas.height - 1, 1, 1).data,
+                          ];
+                          
+                          const hasTransparentBg = corners.some(pixel => pixel && pixel[3] < 255);
+                          const hasWhiteBg = corners.every(pixel => 
+                            pixel && pixel[0] > 240 && pixel[1] > 240 && pixel[2] > 240
+                          );
+                          
+                          if (hasTransparentBg || hasWhiteBg) {
+                            img.style.objectFit = 'contain';
+                            img.style.padding = '8px';
+                          } else {
+                            img.style.objectFit = 'cover';
+                            img.style.padding = '0';
+                          }
+                        }}
                       />
-                    ))}
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <Package className="w-5 h-5 sm:w-6 sm:h-6 text-slate-400" />
+                    </div>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-slate-900 text-xs sm:text-sm line-clamp-2 mb-1" title={product.name}>
+                    {product.name}
+                  </p>
+                  <div className="flex flex-wrap items-center gap-1 sm:gap-1.5 text-[10px] sm:text-xs text-slate-500">
+                    {product.brand && (
+                      <span className="px-1.5 sm:px-2 py-0.5 bg-slate-100 rounded truncate max-w-[80px] sm:max-w-[100px]" title={product.brand.name}>
+                        {product.brand.name}
+                      </span>
+                    )}
+                    {product.category && (
+                      <span className="px-1.5 sm:px-2 py-0.5 bg-blue-50 text-blue-700 rounded truncate max-w-[80px] sm:max-w-[100px]" title={product.category.name}>
+                        {product.category.name}
+                      </span>
+                    )}
                   </div>
                 </div>
-                <p
-  className="text-sm text-slate-600 mt-1 break-words"
-  title={review.product.name}
->
-  {review.product.name.length > 40
-    ? review.product.name.slice(0, 40) + '...'
-    : review.product.name}
-</p>
-
-{review.comment && (
-  <p
-    className="text-sm text-slate-500 mt-1 italic break-words"
-    title={review.comment}
-  >
-    “{review.comment.length > 80
-      ? review.comment.slice(0, 80) + '...'
-      : review.comment}”
-  </p>
-)}
-
+                <div className="text-right flex-shrink-0">
+                  <p className="font-bold text-slate-900 text-xs sm:text-sm whitespace-nowrap">{product.totalSold} sold</p>
+                  <p className="text-[10px] sm:text-xs text-slate-500 whitespace-nowrap">{formatPrice(product.totalRevenue)}</p>
+                  <Badge 
+                    variant={product.stock === 0 ? "destructive" : product.stock <= 10 ? "secondary" : "outline"} 
+                    className="mt-0.5 sm:mt-1 text-[10px] sm:text-xs"
+                  >
+                    {product.stock} stock
+                  </Badge>
+                </div>
               </div>
-              <div className="text-right flex-shrink-0">
-                <p className="text-xs text-slate-400">
-                  {formatDate(review.createdAt, 'short')}
-                </p>
+            ))}
+          </div>
+        </ScrollArea>
+      </CardContent>
+    </Card>
+  </TabsContent>
+
+  <TabsContent value="customers">
+    <Card>
+      <CardHeader className="px-4 sm:px-6 pb-3 sm:pb-4">
+        <CardTitle className="text-base sm:text-lg">Top Customers</CardTitle>
+        <CardDescription className="text-xs sm:text-sm">Customers who spent the most</CardDescription>
+      </CardHeader>
+      <CardContent className="px-4 sm:px-6">
+        <ScrollArea className="h-96">
+          <div className="space-y-2 sm:space-y-4">
+            {data.topCustomers.map((customer: any, index: number) => (
+              <div key={customer.id} className="flex items-center gap-2 sm:gap-4 p-2 sm:p-3 rounded-lg hover:bg-slate-50 transition-colors">
+                <div className="flex-shrink-0 text-sm sm:text-lg font-bold text-slate-400 w-6 sm:w-8">
+                  #{index + 1}
+                </div>
+                <Avatar className="h-10 w-10 sm:h-12 sm:w-12">
+                  <AvatarImage src={customer.image} />
+                  <AvatarFallback>{customer.name?.[0] || 'U'}</AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-slate-900 text-xs sm:text-base truncate">{customer.name || 'Unknown'}</p>
+                  <p className="text-xs sm:text-sm text-slate-500 truncate">{customer.email}</p>
+                </div>
+                <div className="text-right flex-shrink-0">
+                  <p className="font-bold text-slate-900 text-xs sm:text-base whitespace-nowrap">{formatPrice(customer.totalSpent)}</p>
+                  <p className="text-[10px] sm:text-sm text-slate-500 whitespace-nowrap">{customer.totalOrders} orders</p>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </ScrollArea>
-    </CardContent>
-  </Card>
-</div>
+            ))}
+          </div>
+        </ScrollArea>
+      </CardContent>
+    </Card>
+  </TabsContent>
+
+  <TabsContent value="brands">
+    <Card>
+      <CardHeader className="px-4 sm:px-6 pb-3 sm:pb-4">
+        <CardTitle className="text-base sm:text-lg">Top Brands</CardTitle>
+        <CardDescription className="text-xs sm:text-sm">Brands with most sales</CardDescription>
+      </CardHeader>
+      <CardContent className="px-4 sm:px-6">
+        <ScrollArea className="h-96">
+          <div className="space-y-2 sm:space-y-4">
+            {data.topBrands.map((brand: any, index: number) => (
+              <div key={brand.id} className="flex items-center gap-2 sm:gap-4 p-2 sm:p-3 rounded-lg hover:bg-slate-50 transition-colors">
+                <div className="flex-shrink-0 text-sm sm:text-lg font-bold text-slate-400 w-6 sm:w-8">
+                  #{index + 1}
+                </div>
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-slate-100 rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center">
+                  {brand.logo ? (
+                    <img src={brand.logo} alt={brand.name} className="w-full h-full object-contain" />
+                  ) : (
+                    <Building2 className="w-5 h-5 sm:w-6 sm:h-6 text-slate-400" />
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-slate-900 text-xs sm:text-base truncate">{brand.name}</p>
+                  <p className="text-xs sm:text-sm text-slate-500">{brand.productCount} products</p>
+                </div>
+                <div className="text-right flex-shrink-0">
+                  <p className="font-bold text-slate-900 text-xs sm:text-base whitespace-nowrap">{brand.totalSales}</p>
+                  <p className="text-[10px] sm:text-sm text-slate-500 whitespace-nowrap">total sales</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </ScrollArea>
+      </CardContent>
+    </Card>
+  </TabsContent>
+
+  <TabsContent value="categories">
+    <Card>
+      <CardHeader className="px-4 sm:px-6 pb-3 sm:pb-4">
+        <CardTitle className="text-base sm:text-lg">Top Categories</CardTitle>
+        <CardDescription className="text-xs sm:text-sm">Most popular product categories</CardDescription>
+      </CardHeader>
+      <CardContent className="px-4 sm:px-6">
+        <ScrollArea className="h-96">
+          <div className="space-y-2 sm:space-y-4">
+            {data.topCategories.map((category: any, index: number) => (
+              <div key={category.id} className="flex items-center gap-2 sm:gap-4 p-2 sm:p-3 rounded-lg hover:bg-slate-50 transition-colors">
+                <div className="flex-shrink-0 text-sm sm:text-lg font-bold text-slate-400 w-6 sm:w-8">
+                  #{index + 1}
+                </div>
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-slate-100 rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center">
+                  {category.image ? (
+                    <img src={category.image} alt={category.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <Layers className="w-5 h-5 sm:w-6 sm:h-6 text-slate-400" />
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-slate-900 text-xs sm:text-base truncate">{category.name}</p>
+                  <p className="text-xs sm:text-sm text-slate-500">{category.productCount} products</p>
+                </div>
+                <div className="text-right flex-shrink-0">
+                  <p className="font-bold text-slate-900 text-xs sm:text-base whitespace-nowrap">{category.totalSales}</p>
+                  <p className="text-[10px] sm:text-sm text-slate-500 whitespace-nowrap">total sales</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </ScrollArea>
+      </CardContent>
+    </Card>
+  </TabsContent>
+</Tabs>
+
+      {/* Recent Activity Section */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
+        {/* Recent Inventory Changes */}
+        <Card className="border border-slate-200 shadow-sm hover:shadow-md transition-all duration-200 rounded-xl sm:rounded-2xl bg-white/80 backdrop-blur">
+          <CardHeader className="flex items-center justify-between border-b border-slate-100 pb-3 px-4 sm:px-6">
+            <CardTitle className="flex items-center gap-2 text-slate-800 text-base sm:text-lg font-semibold">
+              <Archive className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-500" />
+              Recent Inventory Changes
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            <ScrollArea className="h-80">
+              <div className="divide-y divide-slate-100">
+                {data.recentInventoryChanges.map((log: any) => (
+                  <div
+                    key={log.id}
+                    className="p-3 sm:p-4 hover:bg-indigo-50/40 transition-colors duration-200 flex items-start gap-2 sm:gap-3"
+                  >
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-lg sm:rounded-xl overflow-hidden flex-shrink-0 shadow-sm">
+                      {log.product.images?.[0] && (
+                        <img
+                          src={log.product.images[0]}
+                          className="w-full h-full object-contain p-1.5 sm:p-2 group-hover:scale-105 transition-transform duration-200"
+                          onLoad={(e) => {
+                            const img = e.currentTarget;
+                            const canvas = document.createElement('canvas');
+                            const ctx = canvas.getContext('2d');
+                            
+                            canvas.width = img.naturalWidth;
+                            canvas.height = img.naturalHeight;
+                            ctx?.drawImage(img, 0, 0);
+                            
+                            const corners = [
+                              ctx?.getImageData(0, 0, 1, 1).data,
+                              ctx?.getImageData(canvas.width - 1, 0, 1, 1).data,
+                              ctx?.getImageData(0, canvas.height - 1, 1, 1).data,
+                              ctx?.getImageData(canvas.width - 1, canvas.height - 1, 1, 1).data,
+                            ];
+                            
+                            const hasTransparentBg = corners.some(pixel => pixel && pixel[3] < 255);
+                            const hasWhiteBg = corners.every(pixel => 
+                              pixel && pixel[0] > 240 && pixel[1] > 240 && pixel[2] > 240
+                            );
+                            
+                            if (hasTransparentBg || hasWhiteBg) {
+                              img.style.objectFit = 'contain';
+                              img.style.padding = '8px';
+                            } else {
+                              img.style.objectFit = 'cover';
+                              img.style.padding = '0';
+                            }
+                          }}
+                        />
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-slate-900 break-words text-xs sm:text-sm leading-snug line-clamp-2">
+                        {log.product.name}
+                      </p>
+                      {log.variant && (
+                        <p className="text-[10px] sm:text-xs text-slate-500 truncate">{log.variant.name}</p>
+                      )}
+                      <div className="flex items-center gap-1.5 sm:gap-2 mt-1 flex-wrap">
+                        <Badge
+                          variant={log.changeAmount > 0 ? 'default' : 'secondary'}
+                          className={`text-[10px] sm:text-xs rounded-full ${
+                            log.changeAmount > 0
+                              ? 'bg-emerald-100 text-emerald-700'
+                              : 'bg-rose-100 text-rose-700'
+                          }`}
+                        >
+                          {log.changeAmount > 0 ? '+' : ''}
+                          {log.changeAmount}
+                        </Badge>
+                        <span className="text-[10px] sm:text-xs text-slate-500 truncate">{log.reason}</span>
+                      </div>
+                    </div>
+                    <div className="text-right flex-shrink-0">
+                      <p className="text-xs sm:text-sm font-semibold text-slate-800 whitespace-nowrap">
+                        {log.newStock} stock
+                      </p>
+                      <p className="text-[10px] sm:text-xs text-slate-400 whitespace-nowrap">
+                        {formatDate(log.createdAt, 'short')}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
+          </CardContent>
+        </Card>
+
+        {/* Recent Reviews */}
+        <Card className="border border-slate-200 shadow-sm hover:shadow-md transition-all duration-200 rounded-xl sm:rounded-2xl bg-white/80 backdrop-blur">
+          <CardHeader className="flex items-center justify-between border-b border-slate-100 pb-3 px-4 sm:px-6">
+            <CardTitle className="flex items-center gap-2 text-slate-800 text-base sm:text-lg font-semibold">
+              <Star className="w-4 h-4 sm:w-5 sm:h-5 text-amber-500 fill-amber-500" />
+              Recent Reviews
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            <ScrollArea className="h-80">
+              <div className="divide-y divide-slate-100">
+                {data.recentReviews.map((review: any) => (
+                  <div
+                    key={review.id}
+                    className="p-3 sm:p-4 hover:bg-amber-50/40 transition-colors duration-200 flex items-start gap-2 sm:gap-3"
+                  >
+                    <Avatar className="h-8 w-8 sm:h-10 sm:w-10 border border-slate-200 shadow-sm flex-shrink-0">
+                      <AvatarImage src={review.user.image} />
+                      <AvatarFallback className="bg-slate-100 text-slate-700 text-xs sm:text-sm">
+                        {review.user.name?.[0] || 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                        <p className="font-medium text-slate-900 text-xs sm:text-sm break-words line-clamp-1">
+                          {review.user.name}
+                        </p>
+                        <div className="flex">
+                          {Array.from({ length: review.rating }).map((_, i) => (
+                            <Star
+                              key={i}
+                              className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-amber-400 text-amber-400"
+                            />
+                          ))}
+                        </div>
+                      </div>
+                      <p
+                        className="text-xs sm:text-sm text-slate-600 mt-1 break-words line-clamp-1"
+                        title={review.product.name}
+                      >
+                        {review.product.name}
+                      </p>
+                      {review.comment && (
+                        <p
+                          className="text-xs sm:text-sm text-slate-500 mt-1 italic break-words line-clamp-2"
+                          title={review.comment}
+                        >
+                          "{review.comment}"
+                        </p>
+                      )}
+                    </div>
+                    <div className="text-right flex-shrink-0">
+                      <p className="text-[10px] sm:text-xs text-slate-400 whitespace-nowrap">
+                        {formatDate(review.createdAt, 'short')}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
+          </CardContent>
+        </Card>
+      </div>
 
 
         {/* Refunds & Notes Section - NEW */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8">
-          {/* Recent Refunds */}
-          {data.recentRefunds.length > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <RotateCcw className="w-5 h-5 text-slate-600" />
-                  Recent Refunds
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="divide-y divide-slate-200">
-                  {data.recentRefunds.map((refund: any) => (
-                    <div key={refund.id} className="p-4 hover:bg-slate-50 transition-colors">
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium text-slate-900 text-sm">
-                            Order #{refund.order.orderNumber}
-                          </p>
-                          <p className="text-sm text-slate-500 truncate">
-                            Requested by {refund.requestedByUser.name}
-                          </p>
-                          {refund.reason && (
-                            <p className="text-xs text-slate-500 mt-1 line-clamp-1">{refund.reason}</p>
-                          )}
-                        </div>
-                        <div className="text-right ml-4">
-                          <p className="font-medium text-slate-900">{formatPrice(refund.amount)}</p>
-                          <Badge 
-                            variant={
-                              refund.status === 'PENDING' ? 'secondary' :
-                              refund.status === 'APPROVED' ? 'default' :
-                              refund.status === 'PROCESSED' ? 'outline' :
-                              'destructive'
-                            }
-                            className="mt-1"
-                          >
-                            {refund.status}
-                          </Badge>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-3 lg:gap-8">
+  {/* Recent Refunds */}
+  {data.recentRefunds.length > 0 && (
+    <Card>
+      <CardHeader className="px-4 sm:px-6 pb-3 sm:pb-4">
+        <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+          <RotateCcw className="w-4 h-4 sm:w-5 sm:h-5 text-slate-600" />
+          Recent Refunds
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="p-0">
+        <div className="divide-y divide-slate-200">
+          {data.recentRefunds.map((refund: any) => (
+            <div key={refund.id} className="p-3 sm:p-4 hover:bg-slate-50 transition-colors">
+              <div className="flex items-start sm:items-center justify-between gap-3">
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-slate-900 text-xs sm:text-sm">
+                    Order #{refund.order.orderNumber}
+                  </p>
+                  <p className="text-xs sm:text-sm text-slate-500 truncate">
+                    Requested by {refund.requestedByUser.name}
+                  </p>
+                  {refund.reason && (
+                    <p className="text-[10px] sm:text-xs text-slate-500 mt-1 line-clamp-1">{refund.reason}</p>
+                  )}
                 </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Recent Order Notes */}
-          {data.recentOrderNotes.length > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <MessageSquare className="w-5 h-5 text-slate-600" />
-                  Recent Order Notes
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="divide-y divide-slate-200">
-                  {data.recentOrderNotes.map((note: any) => (
-                    <div key={note.id} className="p-4 hover:bg-slate-50 transition-colors">
-                      <div className="flex items-start gap-3">
-                        <FileText className="w-5 h-5 text-slate-400 flex-shrink-0 mt-0.5" />
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <p className="font-medium text-slate-900 text-sm">
-                              Order #{note.order.orderNumber}
-                            </p>
-                            {note.isInternal && (
-                              <Badge variant="outline" className="text-xs">Internal</Badge>
-                            )}
-                          </div>
-                          <p className="text-sm text-slate-600 mt-1 line-clamp-2">{note.content}</p>
-                          <div className="flex items-center gap-2 mt-1">
-                            <p className="text-xs text-slate-500">by {note.author.name}</p>
-                            <span className="text-slate-300">•</span>
-                            <p className="text-xs text-slate-500">{formatDate(note.createdAt, 'short')}</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                <div className="text-right flex-shrink-0">
+                  <p className="font-medium text-slate-900 text-xs sm:text-base whitespace-nowrap">{formatPrice(refund.amount)}</p>
+                  <Badge 
+                    variant={
+                      refund.status === 'PENDING' ? 'secondary' :
+                      refund.status === 'APPROVED' ? 'default' :
+                      refund.status === 'PROCESSED' ? 'outline' :
+                      'destructive'
+                    }
+                    className="mt-1 text-[10px] sm:text-xs"
+                  >
+                    {refund.status}
+                  </Badge>
                 </div>
-              </CardContent>
-            </Card>
-          )}
+              </div>
+            </div>
+          ))}
         </div>
+      </CardContent>
+    </Card>
+  )}
+
+  {/* Recent Order Notes */}
+  {data.recentOrderNotes.length > 0 && (
+    <Card>
+      <CardHeader className="px-4 sm:px-6 pb-3 sm:pb-4">
+        <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+          <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 text-slate-600" />
+          Recent Order Notes
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="p-0">
+        <div className="divide-y divide-slate-200">
+          {data.recentOrderNotes.map((note: any) => (
+            <div key={note.id} className="p-3 sm:p-4 hover:bg-slate-50 transition-colors">
+              <div className="flex items-start gap-2 sm:gap-3">
+                <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-slate-400 flex-shrink-0 mt-0.5" />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                    <p className="font-medium text-slate-900 text-xs sm:text-sm">
+                      Order #{note.order.orderNumber}
+                    </p>
+                    {note.isInternal && (
+                      <Badge variant="outline" className="text-[10px] sm:text-xs">Internal</Badge>
+                    )}
+                  </div>
+                  <p className="text-xs sm:text-sm text-slate-600 mt-1 line-clamp-2">{note.content}</p>
+                  <div className="flex items-center gap-1.5 sm:gap-2 mt-1 flex-wrap">
+                    <p className="text-[10px] sm:text-xs text-slate-500">by {note.author.name}</p>
+                    <span className="text-slate-300 hidden sm:inline">•</span>
+                    <p className="text-[10px] sm:text-xs text-slate-500">{formatDate(note.createdAt, 'short')}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  )}
+</div>
 
         {/* Analytics & Quick Actions */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">

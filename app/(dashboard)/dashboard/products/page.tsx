@@ -867,22 +867,25 @@ export default function ProductsPage() {
 
   // Render
   return (
-    <div className="p-4 sm:p-6 pb-20">
+
+<div className="p-4 sm:p-6 pb-20">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-6">
+      <div className="flex flex-col gap-4 mb-6">
         <div className="space-y-2">
           <h1 className="text-2xl sm:text-3xl font-bold">Products Management</h1>
-          <p className="text-gray-600">
+          <p className="text-sm sm:text-base text-gray-600">
             Manage your product inventory, pricing, and variants
           </p>
           {stockAlertCount > 0 && (
-            <div className="flex items-center gap-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <AlertTriangle className="h-4 w-4 text-yellow-600" />
-              <span className="text-sm text-yellow-800">
-                <strong>{stockAlertCount}</strong> products need attention
-              </span>
+            <div className="flex items-start sm:items-center gap-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <AlertTriangle className="h-4 w-4 text-yellow-600 flex-shrink-0 mt-0.5 sm:mt-0" />
+              <div className="flex-1 min-w-0">
+                <span className="text-sm text-yellow-800">
+                  <strong>{stockAlertCount}</strong> products need attention
+                </span>
+              </div>
               <Link href="/dashboard/products/stock">
-                <Button variant="link" size="sm" className="p-0 h-auto text-yellow-700">
+                <Button variant="link" size="sm" className="p-0 h-auto text-yellow-700 whitespace-nowrap">
                   View →
                 </Button>
               </Link>
@@ -890,7 +893,8 @@ export default function ProductsPage() {
           )}
         </div>
         
-        <div className="flex flex-wrap gap-2">
+        {/* Action Buttons - Stacked on mobile, horizontal on desktop */}
+        <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2">
           <SavedFiltersMenu
             savedFilters={savedFilters}
             onApply={handleApplyFilter}
@@ -900,6 +904,7 @@ export default function ProductsPage() {
           <Button 
             variant="outline" 
             size="sm"
+            className="w-full sm:w-auto justify-center"
             onClick={() => {
               const input = document.createElement('input')
               input.type = 'file'
@@ -931,14 +936,14 @@ export default function ProductsPage() {
             <Upload className="h-4 w-4 mr-2" />
             Import
           </Button>
-          <Link href="/dashboard/products/stock">
-            <Button variant="outline" size="sm">
+          <Link href="/dashboard/products/stock" className="w-full sm:w-auto">
+            <Button variant="outline" size="sm" className="w-full justify-center">
               <AlertTriangle className="h-4 w-4 mr-2" />
               Stock Alerts
             </Button>
           </Link>
-          <Link href="/dashboard/products/new">
-            <Button size="sm">
+          <Link href="/dashboard/products/new" className="w-full sm:w-auto">
+            <Button size="sm" className="w-full justify-center">
               <Plus className="h-4 w-4 mr-2" />
               Add Product
             </Button>
@@ -948,25 +953,25 @@ export default function ProductsPage() {
 
       {/* Search and Filters */}
       <Card className="mb-6">
-        <CardContent className="p-4">
-          <div className="flex flex-col lg:flex-row gap-4">
-            {/* Search */}
-            <div className="flex-1">
+        <CardContent className="p-3 sm:p-4">
+          <div className="flex flex-col gap-3 sm:gap-4">
+            {/* Search - Full width on all screens */}
+            <div className="w-full">
               <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                <Command className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Command className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 hidden sm:block" />
                 <Input
                   ref={searchInputRef}
-                  placeholder="Search products, SKU, tags... (Cmd+K)"
+                  placeholder="Search products, SKU, tags..."
                   value={filters.search}
                   onChange={(e) => updateFilter('search', e.target.value)}
-                  className="pl-10 pr-10"
+                  className="pl-10 pr-10 w-full"
                   aria-label="Search products"
                 />
               </div>
             </div>
 
-            {/* Desktop Filters */}
+            {/* Desktop Filters - Hidden on mobile */}
             <div className="hidden lg:flex gap-2 flex-wrap">
               <Select value={filters.stock} onValueChange={(v) => updateFilter('stock', v)}>
                 <SelectTrigger className="w-[140px]">
@@ -1082,174 +1087,230 @@ export default function ProductsPage() {
               </Button>
             </div>
 
-            {/* Mobile Filters */}
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="outline" size="sm" className="lg:hidden">
-                  <Filter className="h-4 w-4 mr-2" />
-                  Filters
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-80 overflow-y-auto">
-                <SheetHeader className="px-6 pt-6 pb-4 border-b">
-                  <SheetTitle>Filters</SheetTitle>
-                </SheetHeader>
-                <div className="px-6 py-6 space-y-4">
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">Stock Status</label>
-                    <Select value={filters.stock} onValueChange={(v) => updateFilter('stock', v)}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Stock</SelectItem>
-                        <SelectItem value="in">In Stock</SelectItem>
-                        <SelectItem value="low">Low Stock</SelectItem>
-                        <SelectItem value="out">Out of Stock</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  {categories.length > 0 && (
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">Category</label>
-                      <Select value={filters.category} onValueChange={(v) => updateFilter('category', v)}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="all">All Categories</SelectItem>
-                          {categories.map((cat) => (
-                            <SelectItem key={cat.id} value={cat.slug}>
-                              {cat.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  )}
-
-                  {brands.length > 0 && (
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">Brand</label>
-                      <Select value={filters.brand} onValueChange={(v) => updateFilter('brand', v)}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="all">All Brands</SelectItem>
-                          {brands.map((brand) => (
-                            <SelectItem key={brand.id} value={brand.slug}>
-                              {brand.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  )}
-
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">Sort By</label>
-                    <Select value={filters.sortBy} onValueChange={(v) => updateFilter('sortBy', v)}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="name">Name</SelectItem>
-                        <SelectItem value="price">Price</SelectItem>
-                        <SelectItem value="stock">Stock</SelectItem>
-                        <SelectItem value="salesCount">Sales</SelectItem>
-                        <SelectItem value="createdAt">Date</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">Featured</label>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="featured"
-                        checked={filters.featured === true}
-                        onCheckedChange={(checked) => updateFilter('featured', checked ? true : null)}
-                      />
-                      <label htmlFor="featured" className="text-sm">Featured products only</label>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">Price Range</label>
-                    <div className="flex gap-2">
-                      <Input
-                        type="number"
-                        placeholder="Min"
-                        value={filters.priceMin}
-                        onChange={(e) => updateFilter('priceMin', e.target.value)}
-                      />
-                      <Input
-                        type="number"
-                        placeholder="Max"
-                        value={filters.priceMax}
-                        onChange={(e) => updateFilter('priceMax', e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-                  <Button onClick={clearFilters} variant="outline" className="w-full">
-                    Clear All Filters
+            {/* Mobile Filter and Refresh Buttons */}
+            <div className="flex gap-2 lg:hidden">
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="sm" className="flex-1">
+                    <Filter className="h-4 w-4 mr-2" />
+                    Filters
                   </Button>
-                </div>
-              </SheetContent>
-            </Sheet>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-full sm:w-80 overflow-y-auto p-0">
+                  <SheetHeader className="px-4 sm:px-6 pt-6 pb-4 border-b">
+                    <SheetTitle>Filters</SheetTitle>
+                  </SheetHeader>
+                  <div className="px-4 sm:px-6 py-6 space-y-4">
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">Stock Status</label>
+                      <Select value={filters.stock} onValueChange={(v) => updateFilter('stock', v)}>
+                        <SelectTrigger className="w-full">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">All Stock</SelectItem>
+                          <SelectItem value="in">In Stock</SelectItem>
+                          <SelectItem value="low">Low Stock</SelectItem>
+                          <SelectItem value="out">Out of Stock</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
 
-            <Button onClick={fetchProducts} variant="outline" size="sm" className="lg:hidden">
-              <RefreshCw className="h-4 w-4" />
-            </Button>
+                    {categories.length > 0 && (
+                      <div>
+                        <label className="text-sm font-medium mb-2 block">Category</label>
+                        <Select value={filters.category} onValueChange={(v) => updateFilter('category', v)}>
+                          <SelectTrigger className="w-full">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">All Categories</SelectItem>
+                            {categories.map((cat) => (
+                              <SelectItem key={cat.id} value={cat.slug}>
+                                {cat.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    )}
+
+                    {brands.length > 0 && (
+                      <div>
+                        <label className="text-sm font-medium mb-2 block">Brand</label>
+                        <Select value={filters.brand} onValueChange={(v) => updateFilter('brand', v)}>
+                          <SelectTrigger className="w-full">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">All Brands</SelectItem>
+                            {brands.map((brand) => (
+                              <SelectItem key={brand.id} value={brand.slug}>
+                                {brand.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    )}
+
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">Sort By</label>
+                      <Select value={filters.sortBy} onValueChange={(v) => updateFilter('sortBy', v)}>
+                        <SelectTrigger className="w-full">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="name">Name</SelectItem>
+                          <SelectItem value="price">Price</SelectItem>
+                          <SelectItem value="stock">Stock</SelectItem>
+                          <SelectItem value="salesCount">Sales</SelectItem>
+                          <SelectItem value="createdAt">Date</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">Sort Order</label>
+                      <Select value={filters.sortOrder} onValueChange={(v) => updateFilter('sortOrder', v)}>
+                        <SelectTrigger className="w-full">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="asc">
+                            {filters.sortBy === 'price' || filters.sortBy === 'stock' ? '↑ Low to High' : 'A to Z'}
+                          </SelectItem>
+                          <SelectItem value="desc">
+                            {filters.sortBy === 'price' || filters.sortBy === 'stock' ? '↓ High to Low' : 'Z to A'}
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">Featured</label>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="featured"
+                          checked={filters.featured === true}
+                          onCheckedChange={(checked) => updateFilter('featured', checked ? true : null)}
+                        />
+                        <label htmlFor="featured" className="text-sm cursor-pointer">Featured products only</label>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">Price Range</label>
+                      <div className="flex gap-2">
+                        <Input
+                          type="number"
+                          placeholder="Min"
+                          value={filters.priceMin}
+                          onChange={(e) => updateFilter('priceMin', e.target.value)}
+                          className="flex-1"
+                        />
+                        <Input
+                          type="number"
+                          placeholder="Max"
+                          value={filters.priceMax}
+                          onChange={(e) => updateFilter('priceMax', e.target.value)}
+                          className="flex-1"
+                        />
+                      </div>
+                    </div>
+
+                    <Button onClick={clearFilters} variant="outline" className="w-full">
+                      Clear All Filters
+                    </Button>
+                  </div>
+                </SheetContent>
+              </Sheet>
+
+              <Button onClick={fetchProducts} variant="outline" size="sm" className="px-3">
+                <RefreshCw className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
 
           {/* Active Filters Display */}
           {hasActiveFilters && (
-            <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t">
-              <span className="text-sm text-gray-600">Active filters:</span>
+            <div className="flex flex-wrap gap-2 mt-3 sm:mt-4 pt-3 sm:pt-4 border-t">
+              <span className="text-xs sm:text-sm text-gray-600 leading-6">Active filters:</span>
               {filters.stock !== 'all' && (
-                <Badge variant="secondary" className="gap-1">
+                <Badge variant="secondary" className="gap-1 text-xs">
                   Stock: {filters.stock}
-                  <button onClick={() => updateFilter('stock', 'all')} className="ml-1">×</button>
+                  <button 
+                    onClick={() => updateFilter('stock', 'all')} 
+                    className="ml-1 hover:text-gray-900"
+                    aria-label="Remove stock filter"
+                  >
+                    ×
+                  </button>
                 </Badge>
               )}
               {filters.category !== 'all' && (
-                <Badge variant="secondary" className="gap-1">
+                <Badge variant="secondary" className="gap-1 text-xs">
                   Category: {categories.find(c => c.slug === filters.category)?.name}
-                  <button onClick={() => updateFilter('category', 'all')} className="ml-1">×</button>
+                  <button 
+                    onClick={() => updateFilter('category', 'all')} 
+                    className="ml-1 hover:text-gray-900"
+                    aria-label="Remove category filter"
+                  >
+                    ×
+                  </button>
                 </Badge>
               )}
               {filters.brand !== 'all' && (
-                <Badge variant="secondary" className="gap-1">
+                <Badge variant="secondary" className="gap-1 text-xs">
                   Brand: {brands.find(b => b.slug === filters.brand)?.name}
-                  <button onClick={() => updateFilter('brand', 'all')} className="ml-1">×</button>
+                  <button 
+                    onClick={() => updateFilter('brand', 'all')} 
+                    className="ml-1 hover:text-gray-900"
+                    aria-label="Remove brand filter"
+                  >
+                    ×
+                  </button>
                 </Badge>
               )}
               {filters.featured && (
-                <Badge variant="secondary" className="gap-1">
+                <Badge variant="secondary" className="gap-1 text-xs">
                   Featured
-                  <button onClick={() => updateFilter('featured', null)} className="ml-1">×</button>
+                  <button 
+                    onClick={() => updateFilter('featured', null)} 
+                    className="ml-1 hover:text-gray-900"
+                    aria-label="Remove featured filter"
+                  >
+                    ×
+                  </button>
                 </Badge>
               )}
               {(filters.priceMin || filters.priceMax) && (
-                <Badge variant="secondary" className="gap-1">
+                <Badge variant="secondary" className="gap-1 text-xs">
                   Price: {filters.priceMin || '0'} - {filters.priceMax || '∞'}
                   <button onClick={() => {
                     updateFilter('priceMin', '')
                     updateFilter('priceMax', '')
-                  }} className="ml-1">×</button>
+                  }} 
+                  className="ml-1 hover:text-gray-900"
+                  aria-label="Remove price filter"
+                  >
+                    ×
+                  </button>
                 </Badge>
               )}
               {debouncedSearch && (
-                <Badge variant="secondary" className="gap-1">
+                <Badge variant="secondary" className="gap-1 text-xs max-w-[200px] truncate">
                   Search: "{debouncedSearch}"
-                  <button onClick={() => updateFilter('search', '')} className="ml-1">×</button>
+                  <button 
+                    onClick={() => updateFilter('search', '')} 
+                    className="ml-1 hover:text-gray-900 flex-shrink-0"
+                    aria-label="Remove search filter"
+                  >
+                    ×
+                  </button>
                 </Badge>
               )}
-              <Button onClick={clearFilters} variant="ghost" size="sm" className="h-6">
+              <Button onClick={clearFilters} variant="ghost" size="sm" className="h-6 text-xs">
                 Clear all
               </Button>
             </div>
@@ -1258,12 +1319,13 @@ export default function ProductsPage() {
       </Card>
 
       {/* Content */}
+      {/* Content */}
       {error ? (
         <Card>
-          <CardContent className="p-12 text-center">
+          <CardContent className="p-6 sm:p-12 text-center">
             <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Error Loading Products</h3>
-            <p className="text-gray-600 mb-6">{error}</p>
+            <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">Error Loading Products</h3>
+            <p className="text-sm sm:text-base text-gray-600 mb-6">{error}</p>
             <Button onClick={fetchProducts}>
               <RefreshCw className="h-4 w-4 mr-2" />
               Try Again
@@ -1274,12 +1336,12 @@ export default function ProductsPage() {
         <LoadingSkeleton />
       ) : !productsData || productsData.products.length === 0 ? (
         <Card>
-          <CardContent className="p-8 sm:p-12 text-center">
-            <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+          <CardContent className="p-6 sm:p-8 lg:p-12 text-center">
+            <Package className="h-10 w-10 sm:h-12 sm:w-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
               {hasActiveFilters ? 'No products found' : 'No products yet'}
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-sm sm:text-base text-gray-600 mb-6">
               {hasActiveFilters 
                 ? 'Try adjusting your search or filters.' 
                 : 'Get started by creating your first product.'
@@ -1302,24 +1364,34 @@ export default function ProductsPage() {
       ) : (
         <>
           {/* View Toggle & Stats */}
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-            <div className="flex items-center gap-4">
-              <Checkbox
-                checked={selectedProducts.length === productsData.products.length}
-                onCheckedChange={handleSelectAll}
-                aria-label="Select all products"
-              />
-              <div className="text-sm text-gray-600">
-                <strong>{productsData.pagination.total}</strong> products found
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-4">
+            <div className="flex items-start sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
+              {/* Hide checkbox on mobile for table view, show on desktop */}
+              <div className="hidden lg:block">
+                <Checkbox
+                  checked={selectedProducts.length === productsData.products.length}
+                  onCheckedChange={handleSelectAll}
+                  aria-label="Select all products"
+                />
+              </div>
+              <div className="text-xs sm:text-sm text-gray-600 flex-1">
+                <div>
+                  <strong>{productsData.pagination.total}</strong> products found
+                </div>
                 {productsData.meta.stockAlerts.total > 0 && (
-                  <span className="ml-2 text-yellow-700">
-                    • {productsData.meta.stockAlerts.lowStock} low stock
-                    • {productsData.meta.stockAlerts.outOfStock} out of stock
-                  </span>
+                  <div className="text-yellow-700 mt-1">
+                    <span className="block sm:inline">
+                      {productsData.meta.stockAlerts.lowStock} low stock
+                    </span>
+                    <span className="hidden sm:inline mx-1">•</span>
+                    <span className="block sm:inline">
+                      {productsData.meta.stockAlerts.outOfStock} out of stock
+                    </span>
+                  </div>
                 )}
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 w-full sm:w-auto">
               <Button
                 variant={viewMode === 'table' ? 'default' : 'outline'}
                 size="sm"
@@ -1332,15 +1404,17 @@ export default function ProductsPage() {
                 variant={viewMode === 'grid' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setViewMode('grid')}
+                className="flex-1 sm:flex-none justify-center"
               >
-                <Grid3x3 className="h-4 w-4" />
+                <Grid3x3 className="h-4 w-4 sm:mr-0" />
+                <span className="ml-2 sm:hidden">Grid View</span>
               </Button>
             </div>
           </div>
 
           {/* Grid View */}
-          {viewMode === 'grid' ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {viewMode === 'grid' && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
               {productsData.products.map((product) => (
                 <ProductCard 
                   key={product.id} 
@@ -1351,8 +1425,126 @@ export default function ProductsPage() {
                 />
               ))}
             </div>
-          ) : (
-            /* Table View - Desktop */
+          )}
+
+          {/* Mobile Card List View - Shows when table view on small screens */}
+          {viewMode === 'table' && (
+            <div className="lg:hidden space-y-3">
+              {productsData.products.map((product) => (
+                <Card key={product.id} className="overflow-hidden">
+                  <CardContent className="p-3 sm:p-4">
+                    <div className="flex gap-2 sm:gap-3">
+                      {/* Product Image */}
+                      <div className="w-16 h-16 sm:w-20 sm:h-20 relative flex-shrink-0 rounded-lg overflow-hidden">
+                        <Image
+                          src={product.images[0] || '/placeholder.png'}
+                          alt={product.name}
+                          fill
+                          sizes="(max-width: 640px) 64px, 80px"
+                          className="object-cover"
+                        />
+                      </div>
+                      
+                      {/* Product Info */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between gap-2 mb-1 sm:mb-2">
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-semibold text-sm sm:text-base truncate" title={product.name}>
+                              {product.name}
+                            </h3>
+                            <p className="text-xs text-gray-500 hidden sm:block">
+                              {product.sku ? `SKU: ${product.sku}` : 'No SKU'}
+                            </p>
+                          </div>
+                          {product.isFeatured && (
+                            <Badge variant="outline" className="text-xs flex-shrink-0">
+                              <Star className="h-2 w-2 mr-1 fill-current" />
+                              <span className="hidden sm:inline">Featured</span>
+                            </Badge>
+                          )}
+                        </div>
+                        
+                        {/* Price and Stock */}
+                        <div className="flex items-center justify-between mb-2">
+                          <div>
+                            <span className="font-bold text-sm sm:text-base">{formatCurrency(product.price)}</span>
+                            {product.comparePrice && product.comparePrice > product.price && (
+                              <span className="text-xs text-gray-500 line-through ml-1">
+                                {formatCurrency(product.comparePrice)}
+                              </span>
+                            )}
+                          </div>
+                          <StockBadge stock={product.stock} />
+                        </div>
+                        
+                        {/* Meta Info */}
+                        <div className="flex flex-wrap items-center gap-1 sm:gap-2 text-xs text-gray-600 mb-2 sm:mb-3">
+                          {product.brand && (
+                            <span className="flex items-center gap-1 truncate max-w-[120px]">
+                              {product.brand.logo && (
+                                <Image
+                                  src={product.brand.logo}
+                                  alt={product.brand.name}
+                                  width={12}
+                                  height={12}
+                                  className="object-contain flex-shrink-0"
+                                />
+                              )}
+                              <span className="truncate">{product.brand.name}</span>
+                            </span>
+                          )}
+                          {product.category && (
+                            <>
+                              <span className="hidden sm:inline">•</span>
+                              <span className="truncate max-w-[100px] hidden sm:inline">{product.category.name}</span>
+                            </>
+                          )}
+                          <span className="hidden sm:inline">•</span>
+                          <span>{product._count.orderItems} sold</span>
+                          {product.averageRating && product.averageRating > 0 && (
+                            <>
+                              <span>•</span>
+                              <span className="flex items-center gap-1">
+                                <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                                {product.averageRating.toFixed(1)}
+                              </span>
+                            </>
+                          )}
+                        </div>
+                        
+                        {/* Actions */}
+                        <div className="flex gap-1 sm:gap-2">
+                          <Link href={`/dashboard/products/${product.id}`} className="flex-1">
+                            <Button variant="outline" size="sm" className="w-full text-xs h-8">
+                              <Eye className="h-3 w-3 sm:mr-1" />
+                              <span className="hidden sm:inline">View</span>
+                            </Button>
+                          </Link>
+                          <Link href={`/dashboard/products/${product.id}/edit`} className="flex-1">
+                            <Button variant="outline" size="sm" className="w-full text-xs h-8">
+                              <Edit className="h-3 w-3 sm:mr-1" />
+                              <span className="hidden sm:inline">Edit</span>
+                            </Button>
+                          </Link>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => setDeleteProduct(product)}
+                            className="text-red-600 hover:text-red-700 px-2 h-8"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+
+          {/* Table View - Desktop Only */}
+          {viewMode === 'table' && (
             <div className="hidden lg:block">
               <Card>
                 <CardHeader>

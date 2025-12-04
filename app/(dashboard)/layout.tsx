@@ -28,12 +28,12 @@ export default async function DashboardLayout({
       <Sidebar />
       <div className="flex-1 flex flex-col min-w-0">
         <AdminHeader />
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-1 lg:p-6">
           <div className="max-w-7xl mx-auto">
             <Suspense fallback={
               <div className="flex items-center justify-center min-h-[400px]">
                 <div className="text-center space-y-3">
-                  <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent"></div>
+                  <div className="inline-block h-8 w-8 animate-spin rounded-full border-2 border-solid border-current border-r-transparent"></div>
                   <p className="text-slate-600">Loading...</p>
                 </div>
               </div>
